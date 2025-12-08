@@ -21,7 +21,7 @@ void handle_put_statement(ExprResult expr) {
     log_production("IO: Generating PUT for %s expression",
                    TYPE_NAME[expr.type]);
 
-    const char* proc_name = (expr.type == TYPE_FLOAT) ? "PUTF" : "PUTI";
+    const char* proc_name = (expr.type == TYPE_FLOAT) ? PROC_PUTF : PROC_PUTI;
 
     emit_io(expr.addr, proc_name, 1);
 

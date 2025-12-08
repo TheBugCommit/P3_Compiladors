@@ -75,7 +75,7 @@ ExprResult ensure_type(ExprResult expr, DATA_TYPE target_type) {
 
         char* t_conv =
             is_temporary(expr.addr) ? strdup(expr.addr) : gen_new_temp();
-        emit_unary("I2F", t_conv, expr.addr);
+        emit_unary(OC_I2F, t_conv, expr.addr);
         if (expr.addr) free(expr.addr);
 
         expr.addr = t_conv;
@@ -88,7 +88,7 @@ ExprResult ensure_type(ExprResult expr, DATA_TYPE target_type) {
 
         char* t_conv =
             is_temporary(expr.addr) ? strdup(expr.addr) : gen_new_temp();
-        emit_unary("F2I", t_conv, expr.addr);
+        emit_unary(OC_F2I, t_conv, expr.addr);
         if (expr.addr) free(expr.addr);
 
         expr.addr = t_conv;
