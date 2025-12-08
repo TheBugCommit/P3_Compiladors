@@ -9,6 +9,8 @@ d[0] := float(c[2] + c[1])
 a := int(d)
 
 // Errors
+a := int(d)
+b := b + a
 float x[-2]
 float y[0]
 d := 1

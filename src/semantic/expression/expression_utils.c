@@ -27,14 +27,20 @@ ExprResult clone_result(ExprResult original) {
 }
 
 int is_numeric(ExprResult* e) {
-    if (e->type != TYPE_INT && e->type != TYPE_FLOAT) {
-        REPORT_SEMANTIC_ERROR(current_location(),
-                              "Type error: expected numeric type, got %s",
-                              TYPE_NAME[e->type]);
+    if ((e->type != TYPE_INT && e->type != TYPE_FLOAT) || e->is_array) {
+        if(e->is_array) {
+            REPORT_SEMANTIC_ERROR(current_location(),
+                                  "Type error: expected numeric type, got array");
+        } else {
+            REPORT_SEMANTIC_ERROR(current_location(),
+                                  "Type error: expected numeric type, got %s",
+                                  TYPE_NAME[e->type]);
+        }
         return 0;
     }
     return 1;
 }
+
 ExprResult make_literal_result(DATA_TYPE type, double val) {
     ExprResult res;
     res.type = type;
@@ -45,13 +51,15 @@ ExprResult make_literal_result(DATA_TYPE type, double val) {
     if (type == TYPE_INT) {
         res.value.int_val = (int)val;
         sprintf(res.addr, "%d", res.value.int_val);
-    } else {
+    } else if(type == TYPE_FLOAT) {
         res.value.float_val = (float)val;
         sprintf(res.addr, "%.5g", res.value.float_val);
         if (strchr(res.addr, '.') == NULL && strchr(res.addr, 'e') == NULL &&
             strchr(res.addr, 'E') == NULL) {
             strcat(res.addr, ".0");
         }
+    } else {
+        res.value.bool_val = (char) val;
     }
     return res;
 }
