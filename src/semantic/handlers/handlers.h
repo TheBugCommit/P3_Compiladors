@@ -1,0 +1,15 @@
+#ifndef HANDLERS_H
+#define HANDLERS_H
+
+#include "data_types.h"
+#include "../declarator_list.h"
+#include "handlers_utils.h"
+#include "handlers_io.h"
+
+void handle_simple_declaration(DATA_TYPE declared_type, DeclaratorListNode *list);
+void handle_assigment_sentence(char * token_id, ExprResult expression);
+ExprResult handle_array_access(char* token_id, ExprResult index_expr);
+void handle_array_assignment(char* token_id, ExprResult index_expr, ExprResult value_expr);
+ExprResult handle_primary_id(char* token_id);
+
+#endif
