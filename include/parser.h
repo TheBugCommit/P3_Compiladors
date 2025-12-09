@@ -64,28 +64,40 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     TK_INT = 258,                  /* TK_INT  */
     TK_FLOAT = 259,                /* TK_FLOAT  */
-    TK_ID = 260,                   /* TK_ID  */
-    TK_INT_LIT = 261,              /* TK_INT_LIT  */
-    TK_FLOAT_LIT = 262,            /* TK_FLOAT_LIT  */
-    TK_ASSIGN = 263,               /* TK_ASSIGN  */
-    TK_COMMA = 264,                /* TK_COMMA  */
-    TK_NEWLINE = 265,              /* TK_NEWLINE  */
-    TK_SEMICOLON = 266,            /* TK_SEMICOLON  */
-    TK_DOT = 267,                  /* TK_DOT  */
-    TK_EOF = 268,                  /* TK_EOF  */
-    TK_PLUS = 269,                 /* TK_PLUS  */
-    TK_MINUS = 270,                /* TK_MINUS  */
-    TK_MULT = 271,                 /* TK_MULT  */
-    TK_DIV = 272,                  /* TK_DIV  */
-    TK_MOD = 273,                  /* TK_MOD  */
-    TK_POW = 274,                  /* TK_POW  */
-    TK_LPAREN = 275,               /* TK_LPAREN  */
-    TK_RPAREN = 276,               /* TK_RPAREN  */
-    TK_LBRACKET = 277,             /* TK_LBRACKET  */
-    TK_RBRACKET = 278,             /* TK_RBRACKET  */
-    TK_REPEAT = 279,               /* TK_REPEAT  */
-    TK_DO = 280,                   /* TK_DO  */
-    TK_DONE = 281                  /* TK_DONE  */
+    TK_BOOL = 260,                 /* TK_BOOL  */
+    TK_ID = 261,                   /* TK_ID  */
+    TK_INT_LIT = 262,              /* TK_INT_LIT  */
+    TK_FLOAT_LIT = 263,            /* TK_FLOAT_LIT  */
+    TK_TRUE = 264,                 /* TK_TRUE  */
+    TK_FALSE = 265,                /* TK_FALSE  */
+    TK_ASSIGN = 266,               /* TK_ASSIGN  */
+    TK_COMMA = 267,                /* TK_COMMA  */
+    TK_NEWLINE = 268,              /* TK_NEWLINE  */
+    TK_SEMICOLON = 269,            /* TK_SEMICOLON  */
+    TK_DOT = 270,                  /* TK_DOT  */
+    TK_EOF = 271,                  /* TK_EOF  */
+    TK_PLUS = 272,                 /* TK_PLUS  */
+    TK_MINUS = 273,                /* TK_MINUS  */
+    TK_MULT = 274,                 /* TK_MULT  */
+    TK_DIV = 275,                  /* TK_DIV  */
+    TK_MOD = 276,                  /* TK_MOD  */
+    TK_POW = 277,                  /* TK_POW  */
+    TK_LPAREN = 278,               /* TK_LPAREN  */
+    TK_RPAREN = 279,               /* TK_RPAREN  */
+    TK_LBRACKET = 280,             /* TK_LBRACKET  */
+    TK_RBRACKET = 281,             /* TK_RBRACKET  */
+    TK_REPEAT = 282,               /* TK_REPEAT  */
+    TK_DO = 283,                   /* TK_DO  */
+    TK_DONE = 284,                 /* TK_DONE  */
+    TK_GT = 285,                   /* TK_GT  */
+    TK_GE = 286,                   /* TK_GE  */
+    TK_LT = 287,                   /* TK_LT  */
+    TK_LE = 288,                   /* TK_LE  */
+    TK_EQ = 289,                   /* TK_EQ  */
+    TK_NE = 290,                   /* TK_NE  */
+    TK_NOT = 291,                  /* TK_NOT  */
+    TK_AND = 292,                  /* TK_AND  */
+    TK_OR = 293                    /* TK_OR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -102,10 +114,10 @@ union YYSTYPE
     LoopContext loop_ctx;
     int int_val;
     float float_val;
-
+    int bool_val;
     ExprResult expr_val;
 
-#line 109 "build/parser.tab.h"
+#line 121 "build/parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

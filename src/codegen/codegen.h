@@ -12,6 +12,7 @@ typedef struct {
 } Quad;
 
 void code_init(FILE* output_file);
+void patch_quad(int quad_index, int label);
 void code_close();
 int gen_get_label();
 void emit_binary(const char* op, const char* dest, const char* arg1,

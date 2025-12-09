@@ -30,27 +30,31 @@ extern int yylex();
     LoopContext loop_ctx;
     int int_val;
     float float_val;
-
+    int bool_val;
     ExprResult expr_val;
 }
 %locations
 /* Type Tokens */
-%token <data_type> TK_INT TK_FLOAT
+%token <data_type> TK_INT TK_FLOAT TK_BOOL
 
 /* IDs Tokens */
 %token <text> TK_ID
 
 %token <int_val> TK_INT_LIT 
 %token <float_val> TK_FLOAT_LIT
+%token <bool_val> TK_TRUE TK_FALSE
 
 /* Puntuation and Operation Tokens  */
 %token TK_ASSIGN TK_COMMA TK_NEWLINE TK_SEMICOLON TK_DOT TK_EOF
 %token TK_PLUS TK_MINUS TK_MULT TK_DIV TK_MOD TK_POW
 %token TK_LPAREN TK_RPAREN TK_LBRACKET TK_RBRACKET
 %token TK_REPEAT TK_DO TK_DONE
+%token TK_GT TK_GE TK_LT TK_LE TK_EQ TK_NE
+%token TK_NOT TK_AND TK_OR
 
 %type <data_type> primitive_type
-%type <expr_val>  arith_expr arith_term unary_expr arith_factor primary literal
+%type <expr_val>  arith_expr arith_term unary_expr arith_factor primary literal 
+%type <expr_val>  expression bool_term bool_factor relational_expr bool_term_flow bool_expr_flow
 %type <decl_list> declarator_list declarator
 %type <int_val> M
 %type <loop_ctx> repeat_start_action
@@ -117,6 +121,7 @@ simple_declaration:
 primitive_type:
     TK_INT      { $$ = TYPE_INT; log_production("Type: int"); }
     | TK_FLOAT  { $$ = TYPE_FLOAT; log_production("Type: float"); }
+    | TK_BOOL  { $$ = TYPE_BOOL; log_production("Type: bool"); }
 ;
 
 declarator_list:
@@ -135,11 +140,7 @@ sentence:
     | repeat_sentence end_of_stmt
 ;
 
-M:  { 
-        $$ = gen_get_label(); 
-        log_production("Marker M: Label %d", $$);
-    } 
-;
+M:  { $$ = gen_get_label(); log_production("Marker M: Label %d", $$); };
 
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }
@@ -151,12 +152,51 @@ repeat_sentence:
 ;
 
 assignment_sentence:
-    TK_ID TK_ASSIGN arith_expr { handle_assigment_sentence($1, $3); }
-    | TK_ID TK_LBRACKET arith_expr TK_RBRACKET TK_ASSIGN arith_expr { handle_array_assignment($1, $3, $6); }
+    TK_ID TK_ASSIGN expression { handle_assigment_sentence($1, $3); }
+    | TK_ID TK_LBRACKET arith_expr TK_RBRACKET TK_ASSIGN expression { handle_array_assignment($1, $3, $6); }
 ;
 
 expression_sentence:
-    arith_expr { handle_put_statement($1); }
+    expression { handle_put_statement($1); }
+;
+
+/* TODO: Optimitzacions
+bool_expr_flow:
+    expression { if(!$1.is_constant) convert_to_flow(&$1); $$ = $1; }
+; */
+
+/*bool_term_flow:
+    bool_term { if(!$1.is_constant) convert_to_flow(&$1); $$ = $1; }
+;*/
+
+
+/* Level 1: OR */
+expression:
+    expression TK_OR M bool_term { $$ = eval_or($1, $3, $4); }
+    | bool_term { $$ = $1; }
+;
+
+/* Level 2: AND */
+bool_term:
+    bool_term TK_AND M bool_factor { $$ = eval_and($1, $3, $4); }
+    | bool_factor { $$ = $1; }
+;
+
+/* Level 3: NOT */
+bool_factor:
+    TK_NOT bool_factor { $$ = eval_not($2); }
+    | relational_expr { $$ = $1; }
+;
+
+/* Level 4: Relationals */
+relational_expr:
+    arith_expr TK_GT arith_expr { $$ = eval_relational($1, $3, REL_GT); }
+    | arith_expr TK_LT arith_expr { $$ = eval_relational($1, $3, REL_LT); }
+    | arith_expr TK_GE arith_expr { $$ = eval_relational($1, $3, REL_GE); }
+    | arith_expr TK_LE arith_expr { $$ = eval_relational($1, $3, REL_LE); }
+    | arith_expr TK_EQ arith_expr { $$ = eval_relational($1, $3, REL_EQ); }
+    | arith_expr TK_NE arith_expr { $$ = eval_relational($1, $3, REL_NE); }
+    | arith_expr { $$ = $1; }
 ;
 
 /* Level 5: Sum, Sub, Unary +/- */
@@ -188,14 +228,16 @@ arith_factor:
 ;
 
 primary:
-    TK_LPAREN arith_expr TK_RPAREN { $$ = $2; log_production("Expression: Parenthesized"); }
+    TK_LPAREN expression TK_RPAREN { $$ = $2; log_production("Expression: Parenthesized"); }
     | literal { $$ = $1; }
     | TK_ID { $$ = handle_primary_id($1); }
-    | primitive_type TK_LPAREN arith_expr TK_RPAREN { $$ = eval_cast($1, $3); }
+    | primitive_type TK_LPAREN expression TK_RPAREN { $$ = eval_cast($1, $3); }
     | TK_ID TK_LBRACKET arith_expr TK_RBRACKET { $$ = handle_array_access($1, $3);}
 ;
 
 literal:
-    TK_INT_LIT { $$ = make_literal_result(TYPE_INT, (float)$1); }
+    TK_INT_LIT     { $$ = make_literal_result(TYPE_INT, (float)$1); }
     | TK_FLOAT_LIT { $$ = make_literal_result(TYPE_FLOAT, $1); }
+    | TK_TRUE      { $$ = make_literal_result(TYPE_BOOL, $1); }
+    | TK_FALSE     { $$ = make_literal_result(TYPE_BOOL, $1); }
 %%

@@ -16,7 +16,7 @@ typedef struct ListInt {
 typedef union {
     int int_val;
     float float_val;
-    char bool_val;
+    int bool_val;
 } VALUE_UNION;
 
 typedef struct {

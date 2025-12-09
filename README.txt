@@ -1,8 +1,5 @@
-// Conversio de tipus
-// Permetre copia d'arrays de diferents tipus? fen cast com int a[10], float b[10]   b := float(a) 
-// Al generar MUL per per pow com es millor (bucle per molt gran i mults per petit?)
-// No entenc el desplaçament amb @base a[x] x no es relatiu a a?
-
+// preguntar com eliminar generacio de codi dret de a := 6 > 5 or y < 3
+// Els casts de bool com els gestiono?
 
 Limitacions: Les potencies nomes poden tenir exponents enters
 

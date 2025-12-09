@@ -78,6 +78,7 @@ INT             {DIGIT}+
 
 "int"       { yylval.data_type = TYPE_INT; return TK_INT; }
 "float"     { yylval.data_type = TYPE_FLOAT; return TK_FLOAT; }
+"bool"      { yylval.data_type = TYPE_BOOL; return TK_BOOL; }
 
 %{ /* Operators and expression keywords */ %}
 
@@ -92,6 +93,15 @@ INT             {DIGIT}+
 ")"         { return TK_RPAREN; }
 "["         { return TK_LBRACKET; }
 "]"         { return TK_RBRACKET; }
+">"         { return TK_GT; }
+">="        { return TK_GE; }
+"<"         { return TK_LT; }
+"<="        { return TK_LE; }
+"="         { return TK_EQ; }
+"<>"        { return TK_NE; }
+"not"       { return TK_NOT; }
+"and"       { return TK_AND; }
+"or"        { return TK_OR; }
 
 %{ /* Stroctures */ %}
 
@@ -100,6 +110,9 @@ INT             {DIGIT}+
 "done"      { return TK_DONE; }
 
 %{ /* Literals */ %}
+
+"true"      { yylval.bool_val = 1; return TK_TRUE; }
+"false"     { yylval.bool_val = 0; return TK_FALSE; }
 
 {FLOAT}     { 
     errno = 0;

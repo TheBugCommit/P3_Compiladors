@@ -11,5 +11,7 @@ int is_temporary(const char* addr);
 int is_numeric(ExprResult* e);
 ExprResult make_literal_result(DATA_TYPE type, double val);
 ExprResult ensure_type(ExprResult expr, DATA_TYPE target_type);
+void ensure_boolean_value(ExprResult* expr);
+void convert_to_flow(ExprResult* expr);
 
 #endif

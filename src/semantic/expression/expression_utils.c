@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "../../codegen/codegen.h"
+#include "../../codegen/backpatch.h"
 #include "../../codegen/gen_temps.h"
 #include "../../utils/error.h"
 #include "../../utils/log.h"
@@ -48,6 +49,9 @@ ExprResult make_literal_result(DATA_TYPE type, double val) {
     res.is_array = 0;
     res.addr = (char*)malloc(ADDRESS_SIZE);
 
+    res.true_list = NULL;
+    res.false_list = NULL;
+
     if (type == TYPE_INT) {
         res.value.int_val = (int)val;
         sprintf(res.addr, "%d", res.value.int_val);
@@ -59,8 +63,10 @@ ExprResult make_literal_result(DATA_TYPE type, double val) {
             strcat(res.addr, ".0");
         }
     } else {
-        res.value.bool_val = (char) val;
+        res.value.bool_val = (int)val;
+        sprintf(res.addr, "%d", res.value.bool_val);
     }
+
     return res;
 }
 
@@ -97,4 +103,57 @@ ExprResult ensure_type(ExprResult expr, DATA_TYPE target_type) {
 
     expr.is_constant = 0;
     return expr;
+}
+
+void ensure_boolean_value(ExprResult* expr) {
+    if (expr->type != TYPE_BOOL || expr->addr != NULL) return;
+
+    char* t_val = gen_new_temp();
+
+    int true_lbl = gen_get_label();
+    backpatch(expr->true_list, true_lbl);
+    emit_assign(t_val, "1");
+    
+    int end_jump = gen_get_label();
+    emit_goto(-1);
+    ListInt* end_list = makelist(end_jump);
+
+    int false_lbl = gen_get_label();
+    backpatch(expr->false_list, false_lbl);
+    emit_assign(t_val, "0");
+
+    int end_lbl = gen_get_label();
+    backpatch(end_list, end_lbl);
+
+    expr->addr = t_val;
+    expr->true_list = NULL;
+    expr->false_list = NULL;
+}
+
+void convert_to_flow(ExprResult* expr) {
+    if (expr->addr == NULL) return; // is flux
+
+    int label = gen_get_label();
+    if (expr->is_constant) {
+        emit_goto(-1);
+        if (expr->value.bool_val) {
+            expr->true_list = makelist(label);
+            expr->false_list = NULL;
+        } else {
+            expr->false_list = makelist(label);
+            expr->true_list = NULL;
+        }
+    } else {
+        emit_if_goto(REL_NEI, expr->addr, "0", -1);
+        expr->true_list = makelist(label);
+        
+        int false_label = gen_get_label();
+        emit_goto(-1);
+        expr->false_list = makelist(false_label);
+    }
+
+    if (is_temporary(expr->addr)) gen_release_temp(expr->addr);
+    free(expr->addr);
+    expr->addr = NULL;
+    expr->is_constant = 0; 
 }

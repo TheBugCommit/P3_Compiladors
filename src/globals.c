@@ -5,5 +5,5 @@
 
 #include "data_types.h"
 
-const char* TYPE_NAME[] = {"INT", "FLOAT", "VOID"};
+const char* TYPE_NAME[] = {"INT", "FLOAT", "BOOL", "VOID"};
 int global_arrays_offset = 25;

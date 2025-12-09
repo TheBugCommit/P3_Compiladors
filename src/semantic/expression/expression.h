@@ -12,5 +12,9 @@ ExprResult eval_pow(ExprResult a, ExprResult b);
 ExprResult eval_unary_minus(ExprResult a);
 ExprResult eval_unary_plus(ExprResult a);
 ExprResult eval_cast(DATA_TYPE target_type, ExprResult expr);
+ExprResult eval_relational(ExprResult a, ExprResult b, char* op);
+ExprResult eval_or(ExprResult a, int m_label, ExprResult b);
+ExprResult eval_and(ExprResult a, int m_label, ExprResult b);
+ExprResult eval_not(ExprResult a);
 
 #endif

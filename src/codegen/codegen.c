@@ -30,6 +30,26 @@ void code_init(FILE* output_file) {
     free_quads_memory();
 }
 
+void patch_quad(int quad_index, int label) {
+    int idx = quad_index - 1;
+    if (idx < 0 || idx >= next_quad) return;
+
+    char label_str[20];
+    sprintf(label_str, "%d", label);
+
+    Quad* q = &quads[idx];
+    
+    if (q->res && strcmp(q->res, "-1") == 0) { 
+        free(q->res); q->res = strdup(label_str); 
+    } 
+    else if (q->arg1 && strcmp(q->arg1, "-1") == 0) { 
+        free(q->arg1); q->arg1 = strdup(label_str); 
+    }
+    else if (q->arg2 && strcmp(q->arg2, "-1") == 0) {
+        free(q->arg2); q->arg2 = strdup(label_str);
+    }
+}
+
 static void emit(const char* op, const char* res, const char* arg1,
                  const char* arg2) {
     if (next_quad >= n_quads) {
