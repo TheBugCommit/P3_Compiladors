@@ -43,7 +43,6 @@ void handle_if_else_end(int jump_from_then_label) {
     log_production("Control: IF-ELSE statement closed");
 }
 
-#define MAX_SWITCH_DEPTH 20
 #define MAX_CASES 128
 
 typedef struct {
@@ -53,25 +52,60 @@ typedef struct {
     ListInt* jump_to_test;
     ListInt* break_list;
 
-    CaseEntry cases[MAX_CASES];
+    CaseEntry* cases;
     int case_count;
+    int cases_cap;
 
     int default_label;
 } SwitchContext;
 
-static SwitchContext switch_stack[MAX_SWITCH_DEPTH];
+static SwitchContext* switch_stack = NULL;
 static int switch_top = -1;
+static int switch_stack_cap = 0;
 
 static SwitchContext* current_switch() {
     if (switch_top < 0) return NULL;
     return &switch_stack[switch_top];
 }
 
-void handle_switch_start(ExprResult expr) {
-    if (switch_top >= MAX_SWITCH_DEPTH - 1) {
-        REPORT_SEMANTIC_ERROR(current_location(), "Switch nesting too deep");
-        return;
+static void ensure_free_stack_capacity(int min_size) {
+    if (switch_stack_cap >= min_size) return;
+
+    int new_cap = (switch_stack_cap == 0) ? 2 : switch_stack_cap * 2;
+    if (new_cap < min_size) new_cap = min_size;
+
+    SwitchContext* temp = realloc(switch_stack, new_cap * sizeof(SwitchContext));
+    if (!temp) {
+        fprintf(
+            stderr,
+            "FATAL ERROR: Out of memory reallocating switch stack.\n");
+        exit(1);
     }
+
+    switch_stack = temp;
+    switch_stack_cap = new_cap;
+}
+
+static void ensure_cases_capacity(CaseEntry** entries, int* case_cap, int min_size) {
+    if (*case_cap >= min_size) return;
+
+    int new_cap = (*case_cap == 0) ? 4 : *case_cap * 2;
+    if (*case_cap < min_size) new_cap = min_size;
+
+    CaseEntry* temp = realloc(*entries, new_cap * sizeof(CaseEntry));
+    if (!temp) {
+        fprintf(
+            stderr,
+            "FATAL ERROR: Out of memory reallocating cases entries capacity.\n");
+        exit(1);
+    }
+
+    *case_cap = new_cap;
+    *entries = temp;
+}
+
+void handle_switch_start(ExprResult expr) {
+    ensure_free_stack_capacity(switch_stack_cap + 1);
 
     if (expr.type == TYPE_BOOL) ensure_boolean_value(&expr);
 
@@ -81,7 +115,9 @@ void handle_switch_start(ExprResult expr) {
     ctx->expr_addr = strdup(expr.addr);
     ctx->type = expr.type;
     ctx->break_list = NULL;
+    ctx->cases = NULL;
     ctx->case_count = 0;
+    ctx->cases_cap = 0;
     ctx->default_label = -1;
 
     int goto_instr = gen_get_label();
@@ -97,10 +133,7 @@ void handle_case_start(ExprResult case_literal) {
     SwitchContext* ctx = current_switch();
     if (!ctx) return;
 
-    if (ctx->case_count >= MAX_CASES) {
-        REPORT_SEMANTIC_ERROR(current_location(), "Too many cases in switch");
-        return;
-    }
+    ensure_cases_capacity(&ctx->cases, &ctx->cases_cap, ctx->case_count + 1);
 
     if (case_literal.type != ctx->type) {
         REPORT_SEMANTIC_ERROR(current_location(), "Case type mismatch");

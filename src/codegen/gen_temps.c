@@ -4,22 +4,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-int* temp_busy = NULL;
-int temp_count = 0;
-int temps_in_use = 0;
+static int* temp_busy = NULL;
+static int temp_count = 0;
+static int temps_in_use = 0;
 
-int* free_stack = NULL;
-int free_stack_size = 0;
-int free_stack_cap = 0;
+static int* free_stack = NULL;
+static int free_stack_size = 0;
+static int free_stack_cap = 0;
 
-void ensure_temp_capacity(int min_size) {
+static void ensure_temp_capacity(int min_size) {
     if (temp_count >= min_size) return;
 
     int old = temp_count;
     int new_count = (temp_count == 0) ? 16 : temp_count * 2;
     if (temp_count < min_size) new_count = min_size;
 
-    int* temp = realloc(temp_busy, temp_count * sizeof(int));
+    int* temp = realloc(temp_busy, new_count * sizeof(int));
     if (!temp) {
         fprintf(
             stderr,
@@ -32,7 +32,7 @@ void ensure_temp_capacity(int min_size) {
     for (int i = old; i < temp_count; i++) temp_busy[i] = 0;
 }
 
-void ensure_free_stack_capacity(int min_size) {
+static void ensure_free_stack_capacity(int min_size) {
     if (free_stack_cap >= min_size) return;
 
     int new_cap = (free_stack_cap == 0) ? 16 : free_stack_cap * 2;

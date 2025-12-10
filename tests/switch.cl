@@ -9,7 +9,7 @@ int x
         break;  
     default:
          break; 
-fswitch
+fswitch*/
 switch(3)  
     case 1: 
         switch(1)  
@@ -26,7 +26,8 @@ switch(3)
         break;  
     default:
          break; 
-fswitch*/
+fswitch
+/*
 bool a
 a := 1 = 2 or true
 switch(a)
@@ -38,4 +39,4 @@ switch(a)
         break;
     default:
         break;
-fswitch
+fswitch*/

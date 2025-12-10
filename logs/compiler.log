@@ -3,18 +3,25 @@
 [PROD] Declared VAR: 'x' (Type: INT)
 [PROD] Multiline comment start on row: 3 col: 0
 [PROD] Multicomment skipping characters
-[PROD] Multiline comment closed on row: 29 col: 5
-[PROD] Type: bool
-[PROD] Declared VAR: 'a' (Type: BOOL)
-[PROD] Marker M: Label 3
-[PROD] Assignment: 'a' := $t01
-[PROD] Expression: Identifier 'a' -> Type: BOOL
+[PROD] Multiline comment closed on row: 12 col: 5
 [PROD] Control: SWITCH Start
-[PROD] Control: CASE defined at label 10
-[PROD] Assignment: 'x' := 1
-[PROD] Control: CASE defined at label 12
-[PROD] Assignment: 'x' := 2
-[PROD] Control: DEFAULT defined at label 14
-[PROD] Control: Generating SWITCH Test Block at 15
+[PROD] Reallocating entries 1
+[PROD] Control: CASE defined at label 2
+[PROD] Control: SWITCH Start
+[PROD] Reallocating entries 1
+[PROD] Control: CASE defined at label 3
+[PROD] Assignment: 'x' := 10
+[PROD] Control: DEFAULT defined at label 5
+[PROD] Control: Generating SWITCH Test Block at 6
 [PROD] Control: SWITCH Closed
+[PROD] Assignment: 'x' := 1
+[PROD] Reallocating entries 2
+[PROD] Control: CASE defined at label 10
+[PROD] Assignment: 'x' := 2
+[PROD] Control: DEFAULT defined at label 12
+[PROD] Control: Generating SWITCH Test Block at 13
+[PROD] Control: SWITCH Closed
+[PROD] Multiline comment start on row: 30 col: 0
+[PROD] Multicomment skipping characters
+[PROD] Multiline comment closed on row: 42 col: 5
 --- END OF ANALYSIS ---
