@@ -136,12 +136,12 @@ void convert_to_flow(ExprResult* expr) {
     int label = gen_get_label();
     if (expr->is_constant) {
         emit_goto(-1);
+        expr->true_list = NULL;
+        expr->false_list = NULL;
         if (expr->value.bool_val) {
             expr->true_list = makelist(label);
-            expr->false_list = NULL;
         } else {
             expr->false_list = makelist(label);
-            expr->true_list = NULL;
         }
     } else {
         emit_if_goto(REL_NEI, expr->addr, "0", -1);

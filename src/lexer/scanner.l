@@ -109,6 +109,11 @@ INT             {DIGIT}+
 "do"        { return TK_DO; }
 "done"      { return TK_DONE; }
 
+"if"        { return TK_IF; }
+"then"      { return TK_THEN; }
+"else"      { return TK_ELSE; }
+"fi"        { return TK_FI; }
+
 %{ /* Literals */ %}
 
 "true"      { yylval.bool_val = 1; return TK_TRUE; }

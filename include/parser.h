@@ -86,18 +86,22 @@ extern int yydebug;
     TK_RPAREN = 279,               /* TK_RPAREN  */
     TK_LBRACKET = 280,             /* TK_LBRACKET  */
     TK_RBRACKET = 281,             /* TK_RBRACKET  */
-    TK_REPEAT = 282,               /* TK_REPEAT  */
-    TK_DO = 283,                   /* TK_DO  */
-    TK_DONE = 284,                 /* TK_DONE  */
-    TK_GT = 285,                   /* TK_GT  */
-    TK_GE = 286,                   /* TK_GE  */
-    TK_LT = 287,                   /* TK_LT  */
-    TK_LE = 288,                   /* TK_LE  */
-    TK_EQ = 289,                   /* TK_EQ  */
-    TK_NE = 290,                   /* TK_NE  */
-    TK_NOT = 291,                  /* TK_NOT  */
-    TK_AND = 292,                  /* TK_AND  */
-    TK_OR = 293                    /* TK_OR  */
+    TK_GT = 282,                   /* TK_GT  */
+    TK_GE = 283,                   /* TK_GE  */
+    TK_LT = 284,                   /* TK_LT  */
+    TK_LE = 285,                   /* TK_LE  */
+    TK_EQ = 286,                   /* TK_EQ  */
+    TK_NE = 287,                   /* TK_NE  */
+    TK_NOT = 288,                  /* TK_NOT  */
+    TK_AND = 289,                  /* TK_AND  */
+    TK_OR = 290,                   /* TK_OR  */
+    TK_IF = 291,                   /* TK_IF  */
+    TK_THEN = 292,                 /* TK_THEN  */
+    TK_ELSE = 293,                 /* TK_ELSE  */
+    TK_FI = 294,                   /* TK_FI  */
+    TK_REPEAT = 295,               /* TK_REPEAT  */
+    TK_DO = 296,                   /* TK_DO  */
+    TK_DONE = 297                  /* TK_DONE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -117,7 +121,7 @@ union YYSTYPE
     int bool_val;
     ExprResult expr_val;
 
-#line 121 "build/parser.tab.h"
+#line 125 "build/parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

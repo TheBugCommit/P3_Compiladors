@@ -1,8 +1,7 @@
-int x, y
+int x, y, z
 x := 1
 y := 1
 repeat 4 do
-    int z
     z := x
     repeat 3 do 
         y := x * 2

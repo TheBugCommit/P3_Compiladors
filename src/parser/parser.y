@@ -48,15 +48,19 @@ extern int yylex();
 %token TK_ASSIGN TK_COMMA TK_NEWLINE TK_SEMICOLON TK_DOT TK_EOF
 %token TK_PLUS TK_MINUS TK_MULT TK_DIV TK_MOD TK_POW
 %token TK_LPAREN TK_RPAREN TK_LBRACKET TK_RBRACKET
-%token TK_REPEAT TK_DO TK_DONE
 %token TK_GT TK_GE TK_LT TK_LE TK_EQ TK_NE
 %token TK_NOT TK_AND TK_OR
 
+/* Stroctures*/
+%token TK_IF TK_THEN TK_ELSE TK_FI
+%token TK_REPEAT TK_DO TK_DONE
+
 %type <data_type> primitive_type
 %type <expr_val>  arith_expr arith_term unary_expr arith_factor primary literal 
-%type <expr_val>  expression bool_term bool_factor relational_expr bool_term_flow bool_expr_flow
+%type <expr_val>  expression bool_term bool_factor relational_expr //bool_term_flow bool_expr_flow
+%type <expr_val>  if_condition
 %type <decl_list> declarator_list declarator
-%type <int_val> M
+%type <int_val> M N
 %type <loop_ctx> repeat_start_action
 %define parse.error detailed
 
@@ -81,10 +85,9 @@ program_item:
     | sentence
 ;
 
-loop_item_list:
-    /* buit */
-    | loop_item_list program_item
-    | loop_item_list TK_NEWLINE
+sentence_list:
+    | sentence_list sentence
+    | sentence_list TK_NEWLINE
 ;
 
 optional_newlines:
@@ -138,9 +141,26 @@ sentence:
     assignment_sentence end_of_stmt
     | expression_sentence end_of_stmt
     | repeat_sentence end_of_stmt
+    | if_sentence end_of_stmt
 ;
 
 M:  { $$ = gen_get_label(); log_production("Marker M: Label %d", $$); };
+
+N: { 
+    $$ = gen_get_label();
+    emit_goto(-1);
+    log_production("Marker N: Generated GOTO at %d", $$);
+};
+
+if_condition:
+    TK_IF expression TK_THEN { handle_if_condition_check(&$2); }
+    M { handle_if_then_block(&$2, $5); $$ = $2; }
+
+if_sentence:
+    if_condition sentence_list TK_FI { handle_if_end(&$1); }
+    | if_condition sentence_list N TK_ELSE M { handle_if_else_transition(&$1, $5); }
+    sentence_list TK_FI { handle_if_else_end($3); }
+;
 
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }
@@ -148,7 +168,7 @@ repeat_start_action:
 
 repeat_sentence:
     repeat_start_action M
-    loop_item_list TK_DONE { handle_repeat_end($1, $2); }
+    sentence_list TK_DONE { handle_repeat_end($1, $2); }
 ;
 
 assignment_sentence:
