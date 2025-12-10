@@ -1,6 +1,4 @@
-// preguntar com eliminar generacio de codi dret de a := 6 > 5 or y < 3
-// Els casts de bool com els gestiono?
-// en les estroctures s'ha de comprobar semanticament o sintacticament el tipus de l'expressió?
+//TODO: en el repeat gestionar 0 o negatius (0 cap i negatius fer fins a 0)
 
 Limitacions: Les potencies nomes poden tenir exponents enters
 

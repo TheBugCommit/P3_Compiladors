@@ -155,7 +155,7 @@ N: {
 
 conditional_sentence:
     if_sentence
-    //| switch_sentence
+    | switch_sentence
 
 if_condition:
     TK_IF expression TK_THEN { handle_if_condition_check(&$2); }
@@ -167,7 +167,25 @@ if_sentence:
     sentence_list TK_FI { handle_if_else_end($3); }
 ;
 
-//switch_sentence:
+switch_sentence:
+    TK_SWITCH TK_LPAREN expression TK_RPAREN optional_newlines { handle_switch_start($3); }
+    case_list case_default TK_FSWITCH { handle_switch_end(); }
+
+case_list:
+    case_item
+    | case_list case_item
+
+case_item:
+    TK_CASE literal TK_COLON { handle_case_start($2); }
+    sentence_list case_break
+
+case_default:
+    TK_DEFAULT TK_COLON { handle_default_start(); }
+    sentence_list case_break
+
+case_break:
+    TK_BREAK TK_SEMICOLON optional_newlines { handle_switch_break(); }
+
 
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }

@@ -74,34 +74,40 @@ extern int yydebug;
     TK_COMMA = 267,                /* TK_COMMA  */
     TK_NEWLINE = 268,              /* TK_NEWLINE  */
     TK_SEMICOLON = 269,            /* TK_SEMICOLON  */
-    TK_DOT = 270,                  /* TK_DOT  */
-    TK_EOF = 271,                  /* TK_EOF  */
-    TK_PLUS = 272,                 /* TK_PLUS  */
-    TK_MINUS = 273,                /* TK_MINUS  */
-    TK_MULT = 274,                 /* TK_MULT  */
-    TK_DIV = 275,                  /* TK_DIV  */
-    TK_MOD = 276,                  /* TK_MOD  */
-    TK_POW = 277,                  /* TK_POW  */
-    TK_LPAREN = 278,               /* TK_LPAREN  */
-    TK_RPAREN = 279,               /* TK_RPAREN  */
-    TK_LBRACKET = 280,             /* TK_LBRACKET  */
-    TK_RBRACKET = 281,             /* TK_RBRACKET  */
-    TK_GT = 282,                   /* TK_GT  */
-    TK_GE = 283,                   /* TK_GE  */
-    TK_LT = 284,                   /* TK_LT  */
-    TK_LE = 285,                   /* TK_LE  */
-    TK_EQ = 286,                   /* TK_EQ  */
-    TK_NE = 287,                   /* TK_NE  */
-    TK_NOT = 288,                  /* TK_NOT  */
-    TK_AND = 289,                  /* TK_AND  */
-    TK_OR = 290,                   /* TK_OR  */
-    TK_IF = 291,                   /* TK_IF  */
-    TK_THEN = 292,                 /* TK_THEN  */
-    TK_ELSE = 293,                 /* TK_ELSE  */
-    TK_FI = 294,                   /* TK_FI  */
-    TK_REPEAT = 295,               /* TK_REPEAT  */
-    TK_DO = 296,                   /* TK_DO  */
-    TK_DONE = 297                  /* TK_DONE  */
+    TK_COLON = 270,                /* TK_COLON  */
+    TK_DOT = 271,                  /* TK_DOT  */
+    TK_EOF = 272,                  /* TK_EOF  */
+    TK_PLUS = 273,                 /* TK_PLUS  */
+    TK_MINUS = 274,                /* TK_MINUS  */
+    TK_MULT = 275,                 /* TK_MULT  */
+    TK_DIV = 276,                  /* TK_DIV  */
+    TK_MOD = 277,                  /* TK_MOD  */
+    TK_POW = 278,                  /* TK_POW  */
+    TK_LPAREN = 279,               /* TK_LPAREN  */
+    TK_RPAREN = 280,               /* TK_RPAREN  */
+    TK_LBRACKET = 281,             /* TK_LBRACKET  */
+    TK_RBRACKET = 282,             /* TK_RBRACKET  */
+    TK_GT = 283,                   /* TK_GT  */
+    TK_GE = 284,                   /* TK_GE  */
+    TK_LT = 285,                   /* TK_LT  */
+    TK_LE = 286,                   /* TK_LE  */
+    TK_EQ = 287,                   /* TK_EQ  */
+    TK_NE = 288,                   /* TK_NE  */
+    TK_NOT = 289,                  /* TK_NOT  */
+    TK_AND = 290,                  /* TK_AND  */
+    TK_OR = 291,                   /* TK_OR  */
+    TK_IF = 292,                   /* TK_IF  */
+    TK_THEN = 293,                 /* TK_THEN  */
+    TK_ELSE = 294,                 /* TK_ELSE  */
+    TK_FI = 295,                   /* TK_FI  */
+    TK_REPEAT = 296,               /* TK_REPEAT  */
+    TK_DO = 297,                   /* TK_DO  */
+    TK_DONE = 298,                 /* TK_DONE  */
+    TK_SWITCH = 299,               /* TK_SWITCH  */
+    TK_CASE = 300,                 /* TK_CASE  */
+    TK_BREAK = 301,                /* TK_BREAK  */
+    TK_DEFAULT = 302,              /* TK_DEFAULT  */
+    TK_FSWITCH = 303               /* TK_FSWITCH  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -121,7 +127,7 @@ union YYSTYPE
     int bool_val;
     ExprResult expr_val;
 
-#line 125 "build/parser.tab.h"
+#line 131 "build/parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

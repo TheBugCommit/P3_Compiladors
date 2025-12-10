@@ -134,7 +134,7 @@ void convert_to_flow(ExprResult* expr) {
     if (expr->addr == NULL) return; // is flux
 
     int label = gen_get_label();
-    if (expr->is_constant) {
+    /*if (expr->is_constant) {
         emit_goto(-1);
         expr->true_list = NULL;
         expr->false_list = NULL;
@@ -143,14 +143,14 @@ void convert_to_flow(ExprResult* expr) {
         } else {
             expr->false_list = makelist(label);
         }
-    } else {
+    } else {*/
         emit_if_goto(REL_NEI, expr->addr, "0", -1);
         expr->true_list = makelist(label);
         
         int false_label = gen_get_label();
         emit_goto(-1);
         expr->false_list = makelist(false_label);
-    }
+   // }
 
     if (is_temporary(expr->addr)) gen_release_temp(expr->addr);
     free(expr->addr);
