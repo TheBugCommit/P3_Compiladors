@@ -114,6 +114,12 @@ INT             {DIGIT}+
 "else"      { return TK_ELSE; }
 "fi"        { return TK_FI; }
 
+"switch"    { return TK_SWITCH; }
+"case"      { return TK_CASE; }
+"break"     { return TK_BREAK; }
+"default"   { return TK_DEFAULT; }
+"fswitch"   { return TK_FSWITCH; }
+
 %{ /* Literals */ %}
 
 "true"      { yylval.bool_val = 1; return TK_TRUE; }
@@ -163,6 +169,7 @@ INT             {DIGIT}+
 ","         { return TK_COMMA; }
 ";"         { return TK_SEMICOLON; }
 "."         { return TK_DOT; }
+":"         { return TK_COLON; }
 
 {WHITESPACE}+      { }
 {RETURN}+          { return TK_NEWLINE; }

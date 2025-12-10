@@ -1,4 +1,8 @@
 int x
-if false then x := 1 
-else x := 2 
+if 2 > 1 then 
+    if 1>3 then
+        x := 1 
+    fi
+else 
+    x := 2 
 fi

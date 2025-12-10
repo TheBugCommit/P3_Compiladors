@@ -1,30 +1,12 @@
 --- START OF ANALYSIS ---
 [PROD] Type: int
-[PROD] Declared VAR: 'z' (Type: INT)
-[PROD] Declared VAR: 'y' (Type: INT)
 [PROD] Declared VAR: 'x' (Type: INT)
+[PROD] Marker M: Label 3
+[PROD] Marker M: Label 5
 [PROD] Assignment: 'x' := 1
-[PROD] Assignment: 'y' := 1
-[PROD] Control: Repeat Start (Count 0 to 4)
-[PROD] Marker M: Label 4
-[PROD] Expression: Identifier 'x' -> Type: INT
-[PROD] Assignment: 'z' := x
-[PROD] Control: Repeat Start (Count 0 to 3)
-[PROD] Marker M: Label 6
-[PROD] Expression: Identifier 'x' -> Type: INT
-[PROD] Strength Reduction: x * 2 -> x + x
-[PROD] Generating code
-[PROD] Assignment: 'y' := $t03
-[PROD] Control: Repeat End
-[PROD] Expression: Identifier 'x' -> Type: INT
-[PROD] Generating code
-[PROD] Assignment: 'x' := $t02
-[PROD] Expression: Identifier 'y' -> Type: INT
-[PROD] Expression: Identifier 'x' -> Type: INT
-[PROD] Generating code
-[PROD] Assignment: 'y' := $t02
-[PROD] Control: Repeat End
-[PROD] Multiline comment start on row: 13 col: 0
-[PROD] Multicomment skipping characters
-[PROD] Multiline comment closed on row: 30 col: 0
+[PROD] Control: IF statement closed
+[PROD] Marker N: Generated GOTO at 6
+[PROD] Marker M: Label 7
+[PROD] Assignment: 'x' := 2
+[PROD] Control: IF-ELSE statement closed
 --- END OF ANALYSIS ---

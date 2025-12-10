@@ -45,7 +45,7 @@ extern int yylex();
 %token <bool_val> TK_TRUE TK_FALSE
 
 /* Puntuation and Operation Tokens  */
-%token TK_ASSIGN TK_COMMA TK_NEWLINE TK_SEMICOLON TK_DOT TK_EOF
+%token TK_ASSIGN TK_COMMA TK_NEWLINE TK_SEMICOLON TK_COLON TK_DOT TK_EOF
 %token TK_PLUS TK_MINUS TK_MULT TK_DIV TK_MOD TK_POW
 %token TK_LPAREN TK_RPAREN TK_LBRACKET TK_RBRACKET
 %token TK_GT TK_GE TK_LT TK_LE TK_EQ TK_NE
@@ -54,6 +54,7 @@ extern int yylex();
 /* Stroctures*/
 %token TK_IF TK_THEN TK_ELSE TK_FI
 %token TK_REPEAT TK_DO TK_DONE
+%token TK_SWITCH TK_CASE TK_BREAK TK_DEFAULT TK_FSWITCH 
 
 %type <data_type> primitive_type
 %type <expr_val>  arith_expr arith_term unary_expr arith_factor primary literal 
@@ -141,7 +142,7 @@ sentence:
     assignment_sentence end_of_stmt
     | expression_sentence end_of_stmt
     | repeat_sentence end_of_stmt
-    | if_sentence end_of_stmt
+    | conditional_sentence end_of_stmt
 ;
 
 M:  { $$ = gen_get_label(); log_production("Marker M: Label %d", $$); };
@@ -152,6 +153,10 @@ N: {
     log_production("Marker N: Generated GOTO at %d", $$);
 };
 
+conditional_sentence:
+    if_sentence
+    //| switch_sentence
+
 if_condition:
     TK_IF expression TK_THEN { handle_if_condition_check(&$2); }
     M { handle_if_then_block(&$2, $5); $$ = $2; }
@@ -161,6 +166,8 @@ if_sentence:
     | if_condition sentence_list N TK_ELSE M { handle_if_else_transition(&$1, $5); }
     sentence_list TK_FI { handle_if_else_end($3); }
 ;
+
+//switch_sentence:
 
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }
