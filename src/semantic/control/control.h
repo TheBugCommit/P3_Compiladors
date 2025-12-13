@@ -5,7 +5,11 @@
 
 typedef struct {
     char* counter_addr;
-    char* bound_addr;  
+    char* bound_addr;
+    
+    int check_label;    
+    ListInt* true_list; 
+    ListInt* false_list;
 } LoopContext;
 
 typedef struct {

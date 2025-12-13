@@ -1,27 +1,20 @@
 --- START OF ANALYSIS ---
+[PROD] Multiline comment start on row: 1 col: 0
+[PROD] Multicomment skipping characters
+[PROD] Multicomment skipping characters
+[PROD] Multiline comment closed on row: 11 col: 2
 [PROD] Type: int
 [PROD] Declared VAR: 'x' (Type: INT)
-[PROD] Multiline comment start on row: 3 col: 0
-[PROD] Multicomment skipping characters
-[PROD] Multiline comment closed on row: 12 col: 5
-[PROD] Control: SWITCH Start
-[PROD] Reallocating entries 1
-[PROD] Control: CASE defined at label 2
-[PROD] Control: SWITCH Start
-[PROD] Reallocating entries 1
-[PROD] Control: CASE defined at label 3
-[PROD] Assignment: 'x' := 10
-[PROD] Control: DEFAULT defined at label 5
-[PROD] Control: Generating SWITCH Test Block at 6
-[PROD] Control: SWITCH Closed
-[PROD] Assignment: 'x' := 1
-[PROD] Reallocating entries 2
-[PROD] Control: CASE defined at label 10
 [PROD] Assignment: 'x' := 2
-[PROD] Control: DEFAULT defined at label 12
-[PROD] Control: Generating SWITCH Test Block at 13
-[PROD] Control: SWITCH Closed
-[PROD] Multiline comment start on row: 30 col: 0
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Generating code
+[PROD] Control: Repeat Start (Count 0 to $t01)
+[PROD] Marker M: Label 6
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Generating code
+[PROD] Assignment: 'x' := $t03
+[PROD] Control: Repeat End
+[PROD] Multiline comment start on row: 20 col: 0
 [PROD] Multicomment skipping characters
-[PROD] Multiline comment closed on row: 42 col: 5
+[PROD] Multiline comment closed on row: 41 col: 0
 --- END OF ANALYSIS ---

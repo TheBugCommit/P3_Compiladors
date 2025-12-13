@@ -141,7 +141,7 @@ declarator:
 sentence:
     assignment_sentence end_of_stmt
     | expression_sentence end_of_stmt
-    | repeat_sentence end_of_stmt
+    | iterative_sentence end_of_stmt
     | conditional_sentence end_of_stmt
 ;
 
@@ -187,13 +187,15 @@ case_break:
     TK_BREAK TK_SEMICOLON optional_newlines { handle_switch_break(); }
 
 
+iterative_sentence:
+    repeat_sentence
+
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }
 ;
 
 repeat_sentence:
-    repeat_start_action M
-    sentence_list TK_DONE { handle_repeat_end($1, $2); }
+    repeat_start_action M sentence_list TK_DONE { handle_repeat_end($1, $2); }
 ;
 
 assignment_sentence:
@@ -204,16 +206,6 @@ assignment_sentence:
 expression_sentence:
     expression { handle_put_statement($1); }
 ;
-
-/* TODO: Optimitzacions
-bool_expr_flow:
-    expression { if(!$1.is_constant) convert_to_flow(&$1); $$ = $1; }
-; */
-
-/*bool_term_flow:
-    bool_term { if(!$1.is_constant) convert_to_flow(&$1); $$ = $1; }
-;*/
-
 
 /* Level 1: OR */
 expression:
