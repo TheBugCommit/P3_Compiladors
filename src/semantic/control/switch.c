@@ -9,48 +9,16 @@
 #include "../expression/expression_utils.h"
 #include "control.h"
 
-void handle_if_condition_check(ExprResult* expr) {
-    if (expr->type != TYPE_BOOL) {
-        REPORT_SEMANTIC_ERROR(current_location(),
-                              "IF condition must be BOOLEAN (got %s)",
-                              TYPE_NAME[expr->type]);
-
-        return;
-    }
-
-    convert_to_flow(expr);
-}
-void handle_if_then_block(ExprResult* expr, int start_label) {
-    backpatch(expr->true_list, start_label);
-}
-
-void handle_if_end(ExprResult* expr) {
-    int end_label = gen_get_label();
-    backpatch(expr->false_list, end_label);
-
-    log_production("Control: IF statement closed");
-}
-
-void handle_if_else_transition(ExprResult* expr, int start_else_label) {
-    backpatch(expr->false_list, start_else_label);
-}
-
-void handle_if_else_end(int jump_from_then_label) {
-    int end_label = gen_get_label();
-
-    ListInt* jump_list = makelist(jump_from_then_label);
-    backpatch(jump_list, end_label);
-    log_production("Control: IF-ELSE statement closed");
-}
-
-#define MAX_CASES 128
+typedef struct {
+    char* literal_addr;
+    int label;
+} CaseEntry;
 
 typedef struct {
     char* expr_addr;
     DATA_TYPE type;
 
     ListInt* jump_to_test;
-    ListInt* break_list;
 
     CaseEntry* cases;
     int case_count;
@@ -106,6 +74,7 @@ static void ensure_cases_capacity(CaseEntry** entries, int* case_cap, int min_si
 
 void handle_switch_start(ExprResult expr) {
     ensure_free_stack_capacity(switch_stack_cap + 1);
+    control_push(SCOPE_SWITCH);
 
     if (expr.type == TYPE_BOOL) ensure_boolean_value(&expr);
 
@@ -114,7 +83,6 @@ void handle_switch_start(ExprResult expr) {
 
     ctx->expr_addr = strdup(expr.addr);
     ctx->type = expr.type;
-    ctx->break_list = NULL;
     ctx->cases = NULL;
     ctx->case_count = 0;
     ctx->cases_cap = 0;
@@ -158,21 +126,13 @@ void handle_default_start() {
     log_production("Control: DEFAULT defined at label %d", ctx->default_label);
 }
 
-void handle_switch_break() {
-    SwitchContext* ctx = current_switch();
-    if (!ctx) {
-        REPORT_SEMANTIC_ERROR(current_location(), "BREAK outside of switch");
-        return;
-    }
-
-    int label = gen_get_label();
-    emit_goto(-1);
-    ctx->break_list = merge(ctx->break_list, makelist(label));
-}
-
 void handle_switch_end() {
     SwitchContext* ctx = current_switch();
     if (!ctx) return;
+
+    int skip_tests_instr = gen_get_label();
+    emit_goto(-1); 
+    ListInt* skip_list = makelist(skip_tests_instr);
 
     int test_block_start = gen_get_label();
     backpatch(ctx->jump_to_test, test_block_start);
@@ -187,10 +147,18 @@ void handle_switch_end() {
         if (ctx->cases[i].literal_addr) free(ctx->cases[i].literal_addr);
     }
 
-    emit_goto(ctx->default_label);
+    if(ctx->cases) {
+        free(ctx->cases);
+        ctx->cases = NULL;
+    }
+
+    if (ctx->default_label != -1) {
+        emit_goto(ctx->default_label);
+    }
 
     int end_label = gen_get_label();
-    backpatch(ctx->break_list, end_label);
+    ListInt* breaks = merge(control_pop(), skip_list);
+    backpatch(breaks, end_label);
 
     if (ctx->expr_addr) free(ctx->expr_addr);
     switch_top--;

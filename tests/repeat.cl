@@ -13,8 +13,25 @@ done*/
 int x
 x := 2
 
-repeat x + 2 do
-    x := x + 2
+repeat x do
+    switch(x)
+        case 1:
+            x := x + 2
+            switch(x)
+                case 2:
+                    repeat x do
+                        1 + 1
+                    done
+                    break;
+            fswitch
+            break;
+        case 1:
+            x := x + 2
+            break;
+        case 1:
+            x := x + 2
+            break;
+    fswitch
 done
 
 /*

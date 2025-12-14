@@ -105,6 +105,7 @@ INT             {DIGIT}+
 
 %{ /* Stroctures */ %}
 
+"while"     { return TK_WHILE; }
 "repeat"    { return TK_REPEAT; }
 "do"        { return TK_DO; }
 "done"      { return TK_DONE; }

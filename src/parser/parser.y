@@ -53,12 +53,12 @@ extern int yylex();
 
 /* Stroctures*/
 %token TK_IF TK_THEN TK_ELSE TK_FI
-%token TK_REPEAT TK_DO TK_DONE
+%token TK_REPEAT TK_WHILE TK_DO TK_DONE 
 %token TK_SWITCH TK_CASE TK_BREAK TK_DEFAULT TK_FSWITCH 
 
 %type <data_type> primitive_type
 %type <expr_val>  arith_expr arith_term unary_expr arith_factor primary literal 
-%type <expr_val>  expression bool_term bool_factor relational_expr //bool_term_flow bool_expr_flow
+%type <expr_val>  expression bool_term bool_factor relational_expr
 %type <expr_val>  if_condition
 %type <decl_list> declarator_list declarator
 %type <int_val> M N
@@ -143,6 +143,7 @@ sentence:
     | expression_sentence end_of_stmt
     | iterative_sentence end_of_stmt
     | conditional_sentence end_of_stmt
+    | TK_BREAK TK_SEMICOLON { handle_generic_break(); }
 ;
 
 M:  { $$ = gen_get_label(); log_production("Marker M: Label %d", $$); };
@@ -156,10 +157,12 @@ N: {
 conditional_sentence:
     if_sentence
     | switch_sentence
+;
 
 if_condition:
     TK_IF expression TK_THEN { handle_if_condition_check(&$2); }
     M { handle_if_then_block(&$2, $5); $$ = $2; }
+;
 
 if_sentence:
     if_condition sentence_list TK_FI { handle_if_end(&$1); }
@@ -169,27 +172,28 @@ if_sentence:
 
 switch_sentence:
     TK_SWITCH TK_LPAREN expression TK_RPAREN optional_newlines { handle_switch_start($3); }
-    case_list case_default TK_FSWITCH { handle_switch_end(); }
-
+    case_list TK_FSWITCH { handle_switch_end(); }
+;
 case_list:
     case_item
     | case_list case_item
-
+;
 case_item:
+    case_entry
+    | case_default
+;
+case_entry:
     TK_CASE literal TK_COLON { handle_case_start($2); }
-    sentence_list case_break
-
+    sentence_list
+;
 case_default:
     TK_DEFAULT TK_COLON { handle_default_start(); }
-    sentence_list case_break
-
-case_break:
-    TK_BREAK TK_SEMICOLON optional_newlines { handle_switch_break(); }
-
-
+    sentence_list
+;
 iterative_sentence:
     repeat_sentence
-
+    //| while_sentence
+;
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }
 ;
@@ -197,6 +201,11 @@ repeat_start_action:
 repeat_sentence:
     repeat_start_action M sentence_list TK_DONE { handle_repeat_end($1, $2); }
 ;
+
+/*while_sentence:
+    TK_WHILE expression optional_newlines TK_DO 
+    M 
+    sentence_list TK_DONE*/
 
 assignment_sentence:
     TK_ID TK_ASSIGN expression { handle_assigment_sentence($1, $3); }
@@ -277,4 +286,5 @@ literal:
     | TK_FLOAT_LIT { $$ = make_literal_result(TYPE_FLOAT, $1); }
     | TK_TRUE      { $$ = make_literal_result(TYPE_BOOL, $1); }
     | TK_FALSE     { $$ = make_literal_result(TYPE_BOOL, $1); }
+;
 %%

@@ -18,6 +18,8 @@ LoopContext handle_repeat_start(ExprResult count_expr) {
                               TYPE_NAME[count_expr.type]);
     }
 
+    control_push(SCOPE_LOOP);
+
     LoopContext ctx;
     ctx.counter_addr = gen_new_temp();
     emit_assign(ctx.counter_addr, "0");
@@ -29,9 +31,9 @@ LoopContext handle_repeat_start(ExprResult count_expr) {
         ctx.bound_addr = strdup(count_expr.addr);
     }
 
-    ctx.check_label = gen_get_label();
+    ctx.start_label = gen_get_label();
     emit_if_goto(REL_LTI, ctx.counter_addr, ctx.bound_addr, -1);
-    ctx.true_list = makelist(ctx.check_label);
+    ctx.true_list = makelist(ctx.start_label);
 
     int goto_instr = gen_get_label();
     emit_goto(-1);
@@ -45,12 +47,15 @@ LoopContext handle_repeat_start(ExprResult count_expr) {
 
 void handle_repeat_end(LoopContext ctx, int start_label) {
     emit_binary(OC_ADDI, ctx.counter_addr, ctx.counter_addr, "1");
-    emit_goto(ctx.check_label);
+    emit_goto(ctx.start_label);
 
     backpatch(ctx.true_list, start_label);
 
-    int next_inst = gen_get_label();
-    backpatch(ctx.false_list, next_inst);
+    ListInt* breaks = control_pop();
+    ctx.false_list = merge(ctx.false_list, breaks);
+    
+    int end_label = gen_get_label();
+    backpatch(ctx.false_list, end_label);
 
     log_production("Control: Repeat End");
 

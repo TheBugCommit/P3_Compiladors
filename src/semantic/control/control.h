@@ -1,21 +1,23 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include "../expression/expression.h"
+#include "data_types.h"
 
 typedef struct {
     char* counter_addr;
     char* bound_addr;
     
-    int check_label;    
+    int start_label;    
     ListInt* true_list; 
     ListInt* false_list;
 } LoopContext;
 
-typedef struct {
-    char* literal_addr;
-    int label;
-} CaseEntry;
+typedef enum { SCOPE_LOOP, SCOPE_SWITCH } ScopeType;
+
+void control_push(ScopeType type);
+void control_add_break(int label);
+ListInt* control_pop();
+void handle_generic_break();
 
 LoopContext handle_repeat_start(ExprResult count_expr);
 void handle_repeat_end(LoopContext ctx, int start_label);
@@ -29,7 +31,6 @@ void handle_if_else_end(int jump_from_then_label);
 void handle_switch_start(ExprResult expr);
 void handle_case_start(ExprResult case_literal);
 void handle_default_start();
-void handle_switch_break();
 void handle_switch_end();
 
 #endif

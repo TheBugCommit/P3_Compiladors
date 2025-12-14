@@ -7,14 +7,37 @@
 [PROD] Declared VAR: 'x' (Type: INT)
 [PROD] Assignment: 'x' := 2
 [PROD] Expression: Identifier 'x' -> Type: INT
-[PROD] Generating code
-[PROD] Control: Repeat Start (Count 0 to $t01)
+[PROD] Control: Repeat Start (Count 0 to $t02)
 [PROD] Marker M: Label 6
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Control: SWITCH Start
+[PROD] Control: CASE defined at label 7
 [PROD] Expression: Identifier 'x' -> Type: INT
 [PROD] Generating code
 [PROD] Assignment: 'x' := $t03
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Control: SWITCH Start
+[PROD] Control: CASE defined at label 10
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Control: Repeat Start (Count 0 to $t04)
+[PROD] Marker M: Label 14
+[PROD] Optimization: Constant Folding applied
+[PROD] IO: Generating PUT for INT expression
 [PROD] Control: Repeat End
-[PROD] Multiline comment start on row: 20 col: 0
+[PROD] Control: Generating SWITCH Test Block at 20
+[PROD] Control: SWITCH Closed
+[PROD] Control: CASE defined at label 22
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Generating code
+[PROD] Assignment: 'x' := $t04
+[PROD] Control: CASE defined at label 25
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Generating code
+[PROD] Assignment: 'x' := $t04
+[PROD] Control: Generating SWITCH Test Block at 29
+[PROD] Control: SWITCH Closed
+[PROD] Control: Repeat End
+[PROD] Multiline comment start on row: 37 col: 0
 [PROD] Multicomment skipping characters
-[PROD] Multiline comment closed on row: 41 col: 0
+[PROD] Multiline comment closed on row: 58 col: 0
 --- END OF ANALYSIS ---
