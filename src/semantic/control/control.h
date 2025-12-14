@@ -2,6 +2,7 @@
 #define CONTROL_H
 
 #include "data_types.h"
+#include "../handlers/handlers_utils.h"
 
 typedef struct {
     char* counter_addr;
@@ -21,9 +22,10 @@ void handle_generic_break();
 
 LoopContext handle_repeat_start(ExprResult count_expr);
 void handle_repeat_end(LoopContext ctx, int start_label);
-
 LoopContext handle_while_start(ExprResult loop_expression, int check_label);
 void handle_while_end(LoopContext ctx, int start_label);
+LoopContext handle_dountil_start(int start_label);
+void handle_dountil_end(LoopContext ctx, ExprResult loop_expression);
 
 void handle_if_condition_check(ExprResult* expr);
 void handle_if_then_block(ExprResult* expr, int start_label);

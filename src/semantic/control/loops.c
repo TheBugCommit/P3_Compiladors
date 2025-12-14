@@ -11,12 +11,7 @@
 #include "control.h"
 
 LoopContext handle_repeat_start(ExprResult count_expr) {
-    if (count_expr.type != TYPE_INT) {
-        REPORT_SEMANTIC_ERROR(current_location(),
-                              "Repeat expression must be an INTEGER (got %s)",
-                              TYPE_NAME[count_expr.type]);
-    }
-
+    check_types_match(count_expr.type, TYPE_INT);
     control_push(SCOPE_LOOP);
 
     LoopContext ctx;
@@ -65,12 +60,7 @@ void handle_repeat_end(LoopContext ctx, int start_label) {
 }
 
 LoopContext handle_while_start(ExprResult loop_expression, int check_label) {
-    if (loop_expression.type != TYPE_BOOL) {
-        REPORT_SEMANTIC_ERROR(current_location(),
-                              "Repeat expression must be an BOOL (got %s)",
-                              TYPE_NAME[loop_expression.type]);
-    }
-
+    check_types_match(loop_expression.type, TYPE_BOOL);
     control_push(SCOPE_LOOP);
 
     LoopContext ctx;
@@ -88,6 +78,28 @@ void handle_while_end(LoopContext ctx, int start_label) {
     emit_goto(ctx.start_label);
 
     backpatch(ctx.true_list, start_label);
+
+    int end = gen_get_label();
+    ctx.false_list = merge(ctx.false_list, control_pop());
+    backpatch(ctx.false_list, end);
+}
+
+LoopContext handle_dountil_start(int start_label) {
+    control_push(SCOPE_LOOP);
+    LoopContext ctx;
+
+    ctx.start_label = start_label;
+    return ctx;
+}
+
+void handle_dountil_end(LoopContext ctx, ExprResult loop_expression) {
+    check_types_match(loop_expression.type, TYPE_BOOL);
+    convert_to_flow(&loop_expression);
+
+    ctx.true_list = loop_expression.true_list;
+    ctx.false_list = loop_expression.false_list;
+
+    backpatch(ctx.true_list, ctx.start_label);
 
     int end = gen_get_label();
     ctx.false_list = merge(ctx.false_list, control_pop());

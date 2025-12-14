@@ -107,6 +107,7 @@ INT             {DIGIT}+
 
 "while"     { return TK_WHILE; }
 "repeat"    { return TK_REPEAT; }
+"until"     { return TK_UNTIL; }
 "do"        { return TK_DO; }
 "done"      { return TK_DONE; }
 

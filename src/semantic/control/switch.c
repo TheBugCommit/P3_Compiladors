@@ -102,10 +102,7 @@ void handle_case_start(ExprResult case_literal) {
     if (!ctx) return;
 
     ensure_cases_capacity(&ctx->cases, &ctx->cases_cap, ctx->case_count + 1);
-
-    if (case_literal.type != ctx->type) {
-        REPORT_SEMANTIC_ERROR(current_location(), "Case type mismatch");
-    }
+    check_types_match(case_literal.type, ctx->type);
 
     int current_label = gen_get_label();
 

@@ -1,11 +1,12 @@
 --- START OF ANALYSIS ---
 [PROD] Type: int
-[PROD] Declared VAR: 'i' (Type: INT)
-[PROD] Assignment: 'i' := 0
+[PROD] Declared VAR: 'x' (Type: INT)
+[PROD] Assignment: 'x' := 0
 [PROD] Marker M: Label 2
-[PROD] Expression: Identifier 'i' -> Type: INT
-[PROD] Marker M: Label 4
-[PROD] Expression: Identifier 'i' -> Type: INT
+[PROD] Expression: Identifier 'x' -> Type: INT
 [PROD] Generating code
-[PROD] Assignment: 'i' := $t01
+[PROD] Assignment: 'x' := $t01
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Marker M: Label 6
+[PROD] Control: IF statement closed
 --- END OF ANALYSIS ---

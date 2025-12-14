@@ -10,14 +10,7 @@
 #include "control.h"
 
 void handle_if_condition_check(ExprResult* expr) {
-    if (expr->type != TYPE_BOOL) {
-        REPORT_SEMANTIC_ERROR(current_location(),
-                              "IF condition must be BOOLEAN (got %s)",
-                              TYPE_NAME[expr->type]);
-
-        return;
-    }
-
+    if(!check_types_match(expr->type, TYPE_BOOL)) return;
     convert_to_flow(expr);
 }
 void handle_if_then_block(ExprResult* expr, int start_label) {
@@ -27,7 +20,6 @@ void handle_if_then_block(ExprResult* expr, int start_label) {
 void handle_if_end(ExprResult* expr) {
     int end_label = gen_get_label();
     backpatch(expr->false_list, end_label);
-
     log_production("Control: IF statement closed");
 }
 

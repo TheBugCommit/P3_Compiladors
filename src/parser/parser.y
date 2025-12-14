@@ -53,7 +53,7 @@ extern int yylex();
 
 /* Stroctures*/
 %token TK_IF TK_THEN TK_ELSE TK_FI
-%token TK_REPEAT TK_WHILE TK_DO TK_DONE 
+%token TK_REPEAT TK_WHILE TK_DO TK_DONE TK_UNTIL
 %token TK_SWITCH TK_CASE TK_BREAK TK_DEFAULT TK_FSWITCH 
 
 %type <data_type> primitive_type
@@ -62,7 +62,7 @@ extern int yylex();
 %type <expr_val>  if_condition
 %type <decl_list> declarator_list declarator
 %type <int_val> M N
-%type <loop_ctx> repeat_start_action while_start_action
+%type <loop_ctx> repeat_start_action while_start_action do_until_start_action
 %define parse.error detailed
 
 %%
@@ -193,6 +193,7 @@ case_default:
 iterative_sentence:
     repeat_sentence
     | while_sentence
+    | do_until_sentence
 ;
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }
@@ -208,6 +209,12 @@ while_start_action:
 while_sentence:
     while_start_action M sentence_list TK_DONE { handle_while_end($1, $2); }
 ;
+
+do_until_start_action:
+    TK_DO M { $$ = handle_dountil_start($2); }
+
+do_until_sentence:
+    do_until_start_action sentence_list TK_UNTIL expression { handle_dountil_end($1, $4); }
 
 assignment_sentence:
     TK_ID TK_ASSIGN expression { handle_assigment_sentence($1, $3); }

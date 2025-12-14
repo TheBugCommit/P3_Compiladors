@@ -104,11 +104,12 @@ extern int yydebug;
     TK_WHILE = 297,                /* TK_WHILE  */
     TK_DO = 298,                   /* TK_DO  */
     TK_DONE = 299,                 /* TK_DONE  */
-    TK_SWITCH = 300,               /* TK_SWITCH  */
-    TK_CASE = 301,                 /* TK_CASE  */
-    TK_BREAK = 302,                /* TK_BREAK  */
-    TK_DEFAULT = 303,              /* TK_DEFAULT  */
-    TK_FSWITCH = 304               /* TK_FSWITCH  */
+    TK_UNTIL = 300,                /* TK_UNTIL  */
+    TK_SWITCH = 301,               /* TK_SWITCH  */
+    TK_CASE = 302,                 /* TK_CASE  */
+    TK_BREAK = 303,                /* TK_BREAK  */
+    TK_DEFAULT = 304,              /* TK_DEFAULT  */
+    TK_FSWITCH = 305               /* TK_FSWITCH  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -128,7 +129,7 @@ union YYSTYPE
     int bool_val;
     ExprResult expr_val;
 
-#line 132 "build/parser.tab.h"
+#line 133 "build/parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
