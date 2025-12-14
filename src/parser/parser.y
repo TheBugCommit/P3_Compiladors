@@ -62,7 +62,7 @@ extern int yylex();
 %type <expr_val>  if_condition
 %type <decl_list> declarator_list declarator
 %type <int_val> M N
-%type <loop_ctx> repeat_start_action
+%type <loop_ctx> repeat_start_action while_start_action
 %define parse.error detailed
 
 %%
@@ -192,7 +192,7 @@ case_default:
 ;
 iterative_sentence:
     repeat_sentence
-    //| while_sentence
+    | while_sentence
 ;
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }
@@ -202,10 +202,12 @@ repeat_sentence:
     repeat_start_action M sentence_list TK_DONE { handle_repeat_end($1, $2); }
 ;
 
-/*while_sentence:
-    TK_WHILE expression optional_newlines TK_DO 
-    M 
-    sentence_list TK_DONE*/
+while_start_action:
+    TK_WHILE M expression optional_newlines TK_DO { $$ = handle_while_start($3, $2); }
+;
+while_sentence:
+    while_start_action M sentence_list TK_DONE { handle_while_end($1, $2); }
+;
 
 assignment_sentence:
     TK_ID TK_ASSIGN expression { handle_assigment_sentence($1, $3); }

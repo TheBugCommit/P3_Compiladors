@@ -22,6 +22,9 @@ void handle_generic_break();
 LoopContext handle_repeat_start(ExprResult count_expr);
 void handle_repeat_end(LoopContext ctx, int start_label);
 
+LoopContext handle_while_start(ExprResult loop_expression, int check_label);
+void handle_while_end(LoopContext ctx, int start_label);
+
 void handle_if_condition_check(ExprResult* expr);
 void handle_if_then_block(ExprResult* expr, int start_label);
 void handle_if_end(ExprResult* expr);

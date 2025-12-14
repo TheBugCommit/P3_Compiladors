@@ -1,15 +1,14 @@
-#include "control.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../codegen/codegen.h"
 #include "../../codegen/backpatch.h"
+#include "../../codegen/codegen.h"
 #include "../../codegen/gen_temps.h"
 #include "../../utils/error.h"
 #include "../../utils/log.h"
 #include "../expression/expression_utils.h"
+#include "control.h"
 
 LoopContext handle_repeat_start(ExprResult count_expr) {
     if (count_expr.type != TYPE_INT) {
@@ -24,7 +23,7 @@ LoopContext handle_repeat_start(ExprResult count_expr) {
     ctx.counter_addr = gen_new_temp();
     emit_assign(ctx.counter_addr, "0");
 
-    if(!is_temporary(count_expr.addr)) {
+    if (!is_temporary(count_expr.addr)) {
         ctx.bound_addr = gen_new_temp();
         emit_assign(ctx.bound_addr, count_expr.addr);
     } else {
@@ -41,7 +40,7 @@ LoopContext handle_repeat_start(ExprResult count_expr) {
 
     if (count_expr.addr) free(count_expr.addr);
     log_production("Control: Repeat Start (Count 0 to %s)", ctx.bound_addr);
-    
+
     return ctx;
 }
 
@@ -53,7 +52,7 @@ void handle_repeat_end(LoopContext ctx, int start_label) {
 
     ListInt* breaks = control_pop();
     ctx.false_list = merge(ctx.false_list, breaks);
-    
+
     int end_label = gen_get_label();
     backpatch(ctx.false_list, end_label);
 
@@ -63,4 +62,34 @@ void handle_repeat_end(LoopContext ctx, int start_label) {
     gen_release_temp(ctx.bound_addr);
     if (ctx.counter_addr) free(ctx.counter_addr);
     if (ctx.bound_addr) free(ctx.bound_addr);
+}
+
+LoopContext handle_while_start(ExprResult loop_expression, int check_label) {
+    if (loop_expression.type != TYPE_BOOL) {
+        REPORT_SEMANTIC_ERROR(current_location(),
+                              "Repeat expression must be an BOOL (got %s)",
+                              TYPE_NAME[loop_expression.type]);
+    }
+
+    control_push(SCOPE_LOOP);
+
+    LoopContext ctx;
+    ctx.start_label = check_label;
+
+    convert_to_flow(&loop_expression);
+
+    ctx.true_list = loop_expression.true_list;
+    ctx.false_list = loop_expression.false_list;
+
+    return ctx;
+}
+
+void handle_while_end(LoopContext ctx, int start_label) {
+    emit_goto(ctx.start_label);
+
+    backpatch(ctx.true_list, start_label);
+
+    int end = gen_get_label();
+    ctx.false_list = merge(ctx.false_list, control_pop());
+    backpatch(ctx.false_list, end);
 }
