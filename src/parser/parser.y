@@ -28,6 +28,7 @@ extern int yylex();
     DATA_TYPE data_type;
     DeclaratorListNode *decl_list;
     LoopContext loop_ctx;
+    LoopRange loop_range;
     int int_val;
     float float_val;
     int bool_val;
@@ -45,7 +46,7 @@ extern int yylex();
 %token <bool_val> TK_TRUE TK_FALSE
 
 /* Puntuation and Operation Tokens  */
-%token TK_ASSIGN TK_COMMA TK_NEWLINE TK_SEMICOLON TK_COLON TK_DOT TK_EOF
+%token TK_ASSIGN TK_COMMA TK_NEWLINE TK_SEMICOLON TK_COLON TK_DOT TK_RANGE TK_EOF
 %token TK_PLUS TK_MINUS TK_MULT TK_DIV TK_MOD TK_POW
 %token TK_LPAREN TK_RPAREN TK_LBRACKET TK_RBRACKET
 %token TK_GT TK_GE TK_LT TK_LE TK_EQ TK_NE
@@ -53,7 +54,7 @@ extern int yylex();
 
 /* Stroctures*/
 %token TK_IF TK_THEN TK_ELSE TK_FI
-%token TK_REPEAT TK_WHILE TK_DO TK_DONE TK_UNTIL
+%token TK_REPEAT TK_WHILE TK_FOR TK_DO TK_IN TK_DONE TK_UNTIL
 %token TK_SWITCH TK_CASE TK_BREAK TK_DEFAULT TK_FSWITCH 
 
 %type <data_type> primitive_type
@@ -62,7 +63,8 @@ extern int yylex();
 %type <expr_val>  if_condition
 %type <decl_list> declarator_list declarator
 %type <int_val> M N
-%type <loop_ctx> repeat_start_action while_start_action do_until_start_action
+%type <loop_ctx> repeat_start_action while_start_action do_until_start_action for_start_action
+%type <loop_range> loop_range
 %define parse.error detailed
 
 %%
@@ -194,6 +196,7 @@ iterative_sentence:
     repeat_sentence
     | while_sentence
     | do_until_sentence
+    | for_sentence
 ;
 repeat_start_action:
     TK_REPEAT arith_expr optional_newlines TK_DO { $$ = handle_repeat_start($2); }
@@ -212,9 +215,21 @@ while_sentence:
 
 do_until_start_action:
     TK_DO M { $$ = handle_dountil_start($2); }
-
+;
 do_until_sentence:
     do_until_start_action sentence_list TK_UNTIL expression { handle_dountil_end($1, $4); }
+;
+
+loop_range:
+    arith_expr TK_RANGE arith_expr { $$ = handle_loop_range($1, $3); }
+
+for_start_action:
+    TK_FOR TK_ID TK_IN loop_range optional_newlines TK_DO { $$ = handle_for_start($2, $4); }
+;
+
+for_sentence: 
+    for_start_action M sentence_list TK_DONE { handle_for_end($1, $2); }
+;
 
 assignment_sentence:
     TK_ID TK_ASSIGN expression { handle_assigment_sentence($1, $3); }

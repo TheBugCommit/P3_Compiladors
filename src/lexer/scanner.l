@@ -48,7 +48,7 @@ RETURN          [\n]
 COMMENT         (\/\/|#)
 DIGIT           [0-9]
 EXPONENT        ([eE][+-]?{DIGIT}+)
-FLOAT           (({DIGIT}+\.{DIGIT}+({EXPONENT})?)|(\.{DIGIT}+({EXPONENT})?)|({DIGIT}+{EXPONENT})|({DIGIT}+\.))
+FLOAT           (({DIGIT}+\.{DIGIT}+({EXPONENT})?)|(\.{DIGIT}+({EXPONENT})?)|({DIGIT}+{EXPONENT}))
 INT             {DIGIT}+
 
 %%
@@ -107,8 +107,10 @@ INT             {DIGIT}+
 
 "while"     { return TK_WHILE; }
 "repeat"    { return TK_REPEAT; }
+"for"       { return TK_FOR; }
 "until"     { return TK_UNTIL; }
 "do"        { return TK_DO; }
+"in"        { return TK_IN; }
 "done"      { return TK_DONE; }
 
 "if"        { return TK_IF; }
@@ -170,6 +172,7 @@ INT             {DIGIT}+
 %{ /* Puntuation */ %}
 ","         { return TK_COMMA; }
 ";"         { return TK_SEMICOLON; }
+".."        { return TK_RANGE; }
 "."         { return TK_DOT; }
 ":"         { return TK_COLON; }
 

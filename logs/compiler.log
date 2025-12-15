@@ -1,12 +1,21 @@
 --- START OF ANALYSIS ---
 [PROD] Type: int
-[PROD] Declared VAR: 'x' (Type: INT)
-[PROD] Assignment: 'x' := 0
-[PROD] Marker M: Label 2
-[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Declared VAR: 'a' (Type: INT)
+[PROD] Declared ARRAY: 'x' [10] (Type: INT)
+[PROD] Assignment: 'a' := 2
+[PROD] Expression: Identifier 'a' -> Type: INT
 [PROD] Generating code
-[PROD] Assignment: 'x' := $t01
-[PROD] Expression: Identifier 'x' -> Type: INT
-[PROD] Marker M: Label 6
-[PROD] Control: IF statement closed
+[PROD] Expression: Identifier 'a' -> Type: INT
+[PROD] Generating code
+[PROD] Declared VAR: 'i' (Type: INT)
+[PROD] Assignment: 'i' := $t01
+[PROD] Control: FOR Start (i in range)
+[PROD] Marker M: Label 7
+[PROD] Expression: Identifier 'i' -> Type: INT
+[PROD] Expression: Identifier 'i' -> Type: INT
+[PROD] Generating code
+[PROD] Generating code
+[PROD] Generating code
+[PROD] Array Store: x[...]
+[PROD] Control: FOR End
 --- END OF ANALYSIS ---

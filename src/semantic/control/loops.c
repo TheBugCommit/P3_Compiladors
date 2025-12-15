@@ -8,6 +8,7 @@
 #include "../../utils/error.h"
 #include "../../utils/log.h"
 #include "../expression/expression_utils.h"
+#include "../handlers/handlers.h"
 #include "control.h"
 
 LoopContext handle_repeat_start(ExprResult count_expr) {
@@ -104,4 +105,60 @@ void handle_dountil_end(LoopContext ctx, ExprResult loop_expression) {
     int end = gen_get_label();
     ctx.false_list = merge(ctx.false_list, control_pop());
     backpatch(ctx.false_list, end);
+}
+
+LoopRange handle_loop_range(ExprResult start, ExprResult end) {
+    check_types_match(start.type, TYPE_INT);
+    check_types_match(end.type, TYPE_INT);
+
+    LoopRange range;
+    range.start = start;
+    range.end = end;
+
+    return range;
+}
+
+LoopContext handle_for_start(char* iterator_name, LoopRange range) {
+    control_push(SCOPE_LOOP);
+ 
+    DeclaratorListNode* var  = create_declarator(strdup(iterator_name), 0, 0);
+    handle_simple_declaration(TYPE_INT, var);
+    handle_assigment_sentence(strdup(iterator_name), clone_result(range.start));
+    
+    LoopContext ctx;
+    ctx.counter_addr = strdup(iterator_name);
+    ctx.bound_addr = strdup(range.end.addr);
+
+    ctx.start_label = gen_get_label();
+    emit_if_goto(REL_LEI, ctx.counter_addr, ctx.bound_addr, -1);
+    ctx.true_list = makelist(ctx.start_label);
+
+    int goto_instr = gen_get_label();
+    emit_goto(-1);
+    ctx.false_list = makelist(goto_instr);
+    
+    if (range.start.addr) free(range.start.addr);
+    if (range.end.addr) free(range.end.addr);
+
+    log_production("Control: FOR Start (%s in range)", ctx.counter_addr);
+
+    return ctx;
+}
+
+void handle_for_end(LoopContext ctx, int start_label) {
+    emit_binary(OC_ADDI, ctx.counter_addr, ctx.counter_addr, "1");
+    emit_goto(ctx.start_label);
+
+    backpatch(ctx.true_list, start_label);
+    
+    int end_label = gen_get_label();
+    ctx.false_list = merge(ctx.false_list, control_pop());
+    backpatch(ctx.false_list, end_label);
+
+    log_production("Control: FOR End");
+
+    if (ctx.counter_addr) free(ctx.counter_addr);
+    
+    gen_release_temp(ctx.bound_addr);
+    if (ctx.bound_addr) free(ctx.bound_addr);
 }

@@ -13,6 +13,11 @@ typedef struct {
     ListInt* false_list;
 } LoopContext;
 
+typedef struct {
+    ExprResult start;
+    ExprResult end;
+} LoopRange;
+
 typedef enum { SCOPE_LOOP, SCOPE_SWITCH } ScopeType;
 
 void control_push(ScopeType type);
@@ -26,6 +31,9 @@ LoopContext handle_while_start(ExprResult loop_expression, int check_label);
 void handle_while_end(LoopContext ctx, int start_label);
 LoopContext handle_dountil_start(int start_label);
 void handle_dountil_end(LoopContext ctx, ExprResult loop_expression);
+LoopContext handle_for_start(char* iterator_name, LoopRange range);
+void handle_for_end(LoopContext ctx, int start_label);
+LoopRange handle_loop_range(ExprResult start, ExprResult end);
 
 void handle_if_condition_check(ExprResult* expr);
 void handle_if_then_block(ExprResult* expr, int start_label);
