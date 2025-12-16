@@ -138,8 +138,7 @@ void handle_switch_end() {
                    test_block_start);
 
     for (int i = 0; i < ctx->case_count; i++) {
-        char* op = (ctx->type == TYPE_FLOAT) ? REL_EQF : REL_EQI;
-        emit_if_goto(op, ctx->expr_addr, ctx->cases[i].literal_addr,
+        emit_if_goto(REL_EQ, ctx->expr_addr, ctx->cases[i].literal_addr,
                      ctx->cases[i].label);
         if (ctx->cases[i].literal_addr) free(ctx->cases[i].literal_addr);
     }

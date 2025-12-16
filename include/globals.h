@@ -5,6 +5,7 @@
 
 #define ADDRESS_SIZE 64
 #define VAR_BYTES 4
+#define UNROLL_LIMIT 5
 
 extern const char* TYPE_NAME[];
 extern int global_arrays_offset;

@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "opcodes.h"
+#include "data_types.h"
 
 typedef struct {
     char* op;
@@ -13,6 +14,7 @@ typedef struct {
 
 void code_init(FILE* output_file);
 void patch_quad(int quad_index, int label);
+ListInt* code_copy_and_relocate(int start_label, int end_label);
 void code_close();
 int gen_get_label();
 void emit_binary(const char* op, const char* dest, const char* arg1,

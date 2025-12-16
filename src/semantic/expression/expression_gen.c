@@ -5,6 +5,7 @@
 #include "../../codegen/gen_temps.h"
 #include "../../utils/log.h"
 #include "expression_priv.h"
+#include "globals.h"
 
 ExprResult generate_arithmetic(ExprResult a, ExprResult b, char* op_int,
                                char* op_float) {
@@ -45,7 +46,7 @@ ExprResult generate_arithmetic(ExprResult a, ExprResult b, char* op_int,
 ExprResult generate_pow_code(ExprResult a, ExprResult b) {
     ExprResult res = {TYPE_VOID};
 
-    if (b.is_constant && b.value.int_val >= 0 && b.value.int_val <= 4) {
+    if (b.is_constant && b.value.int_val >= 0 && b.value.int_val <= UNROLL_LIMIT) {
         return pow_optimization(a, b);
     }
 

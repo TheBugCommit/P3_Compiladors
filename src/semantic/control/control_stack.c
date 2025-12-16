@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../../utils/error.h"
+#include "../../utils/log.h"
 #include "../../codegen/codegen.h"
 #include "../../codegen/backpatch.h"
 
@@ -34,10 +35,10 @@ static void ensure_free_stack_capacity(int min_size) {
 
 void control_push(ScopeType type) {
     ensure_free_stack_capacity(control_stack_cap + 1);
-
     control_top++;
     control_stack[control_top].type = type;
     control_stack[control_top].break_list = NULL;
+    log_production("Control Push");
 }
 
 void control_add_break(int label) {
@@ -48,6 +49,8 @@ void control_add_break(int label) {
     
     control_stack[control_top].break_list = 
         merge(control_stack[control_top].break_list, makelist(label));
+
+    log_production("BREAK catched");
 }
 
 ListInt* control_pop() {
@@ -55,6 +58,8 @@ ListInt* control_pop() {
     
     ListInt* breaks = control_stack[control_top].break_list;
     control_top--;
+
+    log_production("Control POP");
     return breaks;
 }
 

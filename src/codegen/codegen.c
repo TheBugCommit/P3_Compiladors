@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "codegen.h"
+#include "backpatch.h"
 
 static Quad* quads = NULL;
 static int n_quads = 0;
@@ -23,6 +24,47 @@ static void free_quads_memory() {
     }
     n_quads = 0;
     next_quad = 0;
+}
+
+static char* relocate_label(char* old_label, int start_idx, int end_idx, int offset) {
+    if (!old_label) return NULL;
+    
+    int label_val = atoi(old_label);
+    
+    if (label_val == -1) return strdup("-1");
+
+    int target_idx = label_val - 1;
+
+    if (target_idx >= start_idx && target_idx <= end_idx) {
+        char new_buffer[20];
+        sprintf(new_buffer, "%d", label_val + offset);
+        return strdup(new_buffer);
+    }
+
+    return strdup(old_label);
+}
+
+static void emit(const char* op, const char* res, const char* arg1,
+                 const char* arg2) {
+    if (next_quad >= n_quads) {
+        int new_capacity = (n_quads == 0) ? 128 : n_quads * 2;
+        Quad* temp = realloc(quads, new_capacity * sizeof(Quad));
+        if (!temp) {
+            fprintf(stderr, "FATAL ERROR: Out of memory reallocating quads.\n");
+            exit(1);
+        }
+
+        quads = temp;
+        n_quads = new_capacity;
+    }
+
+    Quad* q = &quads[next_quad];
+    q->op = op ? strdup(op) : NULL;
+    q->res = res ? strdup(res) : NULL;
+    q->arg1 = arg1 ? strdup(arg1) : NULL;
+    q->arg2 = arg2 ? strdup(arg2) : NULL;
+
+    next_quad++;
 }
 
 void code_init(FILE* output_file) {
@@ -50,27 +92,48 @@ void patch_quad(int quad_index, int label) {
     }
 }
 
-static void emit(const char* op, const char* res, const char* arg1,
-                 const char* arg2) {
-    if (next_quad >= n_quads) {
-        int new_capacity = (n_quads == 0) ? 128 : n_quads * 2;
-        Quad* temp = realloc(quads, new_capacity * sizeof(Quad));
-        if (!temp) {
-            fprintf(stderr, "FATAL ERROR: Out of memory reallocating quads.\n");
-            exit(1);
+ListInt* code_copy_and_relocate(int start_label, int end_label) {
+    ListInt* new_holes = NULL;
+    
+    int start_idx = start_label - 1;
+    int end_idx = end_label - 1;
+    
+    int offset = next_quad - start_idx; 
+
+    if (start_idx < 0 || end_idx > next_quad) return NULL;
+
+    for (int i = start_idx; i < end_idx; i++) {
+        Quad* q = &quads[i];
+        
+        char* new_res = NULL;
+        char* new_arg1 = NULL;
+        char* new_arg2 = NULL;
+
+        if (strcmp(q->op, OC_GOTO) == 0) {
+            new_arg1 = relocate_label(q->arg1, start_idx, end_idx, offset);
+        }
+        else if (strncmp(q->op, OC_IF, 2) == 0) {
+            new_res = relocate_label(q->res, start_idx, end_idx, offset);
+            new_arg1 = q->arg1 ? strdup(q->arg1) : NULL;
+            new_arg2 = q->arg2 ? strdup(q->arg2) : NULL;
+        }
+        else {
+            new_res = q->res ? strdup(q->res) : NULL;
+            new_arg1 = q->arg1 ? strdup(q->arg1) : NULL;
+            new_arg2 = q->arg2 ? strdup(q->arg2) : NULL;
         }
 
-        quads = temp;
-        n_quads = new_capacity;
+        int current_instr = gen_get_label();
+        emit(q->op, new_res, new_arg1, new_arg2);
+        if (strcmp(q->op, OC_GOTO) == 0 && new_arg1 && strcmp(new_arg1, "-1") == 0) {
+            new_holes = merge(new_holes, makelist(current_instr));
+        }
+        if (strncmp(q->op, OC_IF, 2) == 0 && new_res && strcmp(new_res, "-1") == 0) {
+            new_holes = merge(new_holes, makelist(current_instr));
+        }
     }
-
-    Quad* q = &quads[next_quad];
-    q->op = op ? strdup(op) : NULL;
-    q->res = res ? strdup(res) : NULL;
-    q->arg1 = arg1 ? strdup(arg1) : NULL;
-    q->arg2 = arg2 ? strdup(arg2) : NULL;
-
-    next_quad++;
+    
+    return new_holes;
 }
 
 int gen_get_label() { return next_quad + 1; }

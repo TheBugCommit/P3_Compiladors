@@ -6,8 +6,10 @@
 
 typedef struct {
     char* counter_addr;
+    char* internal_cnt_addr;
     char* bound_addr;
-    
+    int is_unrolled;
+    int unroll_count;
     int start_label;    
     ListInt* true_list; 
     ListInt* false_list;
