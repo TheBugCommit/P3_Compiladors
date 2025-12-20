@@ -143,9 +143,7 @@ declarator:
 sentence:
     assignment_sentence end_of_stmt
     | expression_sentence end_of_stmt
-    | iterative_sentence end_of_stmt
-    | conditional_sentence end_of_stmt
-    | TK_BREAK TK_SEMICOLON { handle_generic_break(); }
+    | strocture_sentence end_of_stmt
 ;
 
 M:  { $$ = gen_get_label(); log_production("Marker M: Label %d", $$); };
@@ -155,6 +153,11 @@ N: {
     emit_goto(-1);
     log_production("Marker N: Generated GOTO at %d", $$);
 };
+
+strocture_sentence:
+    iterative_sentence
+    | conditional_sentence
+    | TK_BREAK TK_SEMICOLON { handle_generic_break(); }
 
 conditional_sentence:
     if_sentence

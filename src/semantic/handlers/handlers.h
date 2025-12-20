@@ -11,5 +11,6 @@ void handle_assigment_sentence(char * token_id, ExprResult expression);
 ExprResult handle_array_access(char* token_id, ExprResult index_expr);
 void handle_array_assignment(char* token_id, ExprResult index_expr, ExprResult value_expr);
 ExprResult handle_primary_id(char* token_id);
+void remove_declaration(char* id);
 
 #endif

@@ -127,7 +127,9 @@ LoopContext handle_for_start(char* iterator_name, LoopRange range) {
 
     LoopContext ctx;
     ctx.counter_addr = strdup(iterator_name);
+    ctx.internal_cnt_addr = gen_new_temp();
     ctx.bound_addr = strdup(range.end.addr);
+    emit_assign(ctx.internal_cnt_addr, ctx.counter_addr);
 
     int iterations = 0;
     if (range.start.is_constant && range.end.is_constant) {
@@ -168,17 +170,16 @@ void handle_for_end(LoopContext ctx, int start_label) {
     if (ctx.is_unrolled) {
         int body_end_label = gen_get_label();
         for (int i = 1; i < ctx.unroll_count; i++) {
-            emit_binary(OC_ADDI, ctx.counter_addr, ctx.counter_addr, "1");
-            int guard_instr = gen_get_label();
-            emit_if_goto(REL_GTI, ctx.counter_addr, ctx.bound_addr, -1);
-            breaks = merge(breaks, makelist(guard_instr));
+            emit_binary(OC_ADDI, ctx.internal_cnt_addr, ctx.internal_cnt_addr, "1");
+            emit_assign(ctx.counter_addr, ctx.internal_cnt_addr);
 
             ListInt* new_breaks =
                 code_copy_and_relocate(ctx.start_label, body_end_label);
             breaks = merge(breaks, new_breaks);
         }
     } else {
-        emit_binary(OC_ADDI, ctx.counter_addr, ctx.counter_addr, "1");
+        emit_binary(OC_ADDI, ctx.internal_cnt_addr, ctx.internal_cnt_addr, "1");
+        emit_assign(ctx.counter_addr, ctx.internal_cnt_addr);
         emit_goto(ctx.start_label);
     }
 
@@ -189,8 +190,11 @@ void handle_for_end(LoopContext ctx, int start_label) {
     backpatch(ctx.false_list, end_label);
 
     log_production("Control: FOR End");
+    remove_declaration(ctx.counter_addr);
 
     if (ctx.counter_addr) free(ctx.counter_addr);
+    gen_release_temp(ctx.internal_cnt_addr);
+    if (ctx.internal_cnt_addr) free(ctx.internal_cnt_addr);
     gen_release_temp(ctx.bound_addr);
     if (ctx.bound_addr) free(ctx.bound_addr);
 }

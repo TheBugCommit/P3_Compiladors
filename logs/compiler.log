@@ -4,14 +4,38 @@
 [PROD] Assignment: 'i' := 1
 [PROD] Optimization: Loop Unrolling activated (3 iterations)
 [PROD] Control: FOR Start (i in range)
-[PROD] Marker M: Label 2
+[PROD] Marker M: Label 3
 [PROD] Expression: Identifier 'i' -> Type: INT
-[PROD] Marker M: Label 4
+[PROD] Marker M: Label 5
 [PROD] Assignment: 'i' := 5
-[PROD] Marker N: Generated GOTO at 5
-[PROD] Marker M: Label 6
+[PROD] Marker N: Generated GOTO at 6
+[PROD] Marker M: Label 7
 [PROD] BREAK catched
 [PROD] Control: IF-ELSE statement closed
 [PROD] Control POP
 [PROD] Control: FOR End
+[PROD] Removed VAR: 'i'
+[PROD] Type: int
+[PROD] Declared VAR: 'x' (Type: INT)
+[PROD] Assignment: 'x' := 3
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Generating code
+[PROD] Control Push
+[PROD] Declared VAR: 'i' (Type: INT)
+[PROD] Assignment: 'i' := 1
+[PROD] Control: FOR Start (i in range)
+[PROD] Marker M: Label 28
+[PROD] Expression: Identifier 'i' -> Type: INT
+[PROD] Marker M: Label 30
+[PROD] Assignment: 'i' := 5
+[PROD] Marker N: Generated GOTO at 31
+[PROD] Marker M: Label 32
+[PROD] BREAK catched
+[PROD] Control: IF-ELSE statement closed
+[PROD] Control POP
+[PROD] Control: FOR End
+[PROD] Removed VAR: 'i'
+[PROD] Multiline comment start on row: 19 col: 0
+[PROD] Multicomment skipping characters
+[PROD] Multiline comment closed on row: 56 col: 0
 --- END OF ANALYSIS ---

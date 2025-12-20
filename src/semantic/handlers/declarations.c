@@ -1,5 +1,3 @@
-#include "handlers.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,7 +6,7 @@
 #include "../../utils/error.h"
 #include "../../utils/log.h"
 #include "globals.h"
-
+#include "handlers.h"
 
 void handle_simple_declaration(DATA_TYPE declared_type,
                                DeclaratorListNode* list) {
@@ -49,4 +47,15 @@ void handle_simple_declaration(DATA_TYPE declared_type,
     }
 
     declarator_list_free(list);
+}
+
+void remove_declaration(char* id) {
+    int result = sym_remove(strdup(id));
+    if (result == SYMTAB_NOT_FOUND) {
+        REPORT_SEMANTIC_ERROR(current_location(),
+                              "Identifier '%s' not declared", id);
+
+    } else {
+        log_production("Removed VAR: '%s'", id);
+    }
 }
