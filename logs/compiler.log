@@ -1,92 +1,41 @@
 --- START OF ANALYSIS ---
 [PROD] Type: int
-[PROD] Declared VAR: 'k' (Type: INT)
-[PROD] Declared VAR: 'j' (Type: INT)
-[PROD] Declared VAR: 'i' (Type: INT)
+[PROD] Declared ARRAY: 'a' [1] (Type: INT)
+[PROD] Declared VAR: 'x' (Type: INT)
 [PROD] Type: float
-[PROD] Declared VAR: 'z' (Type: FLOAT)
+[PROD] Declared ARRAY: 'b' [1] (Type: FLOAT)
 [PROD] Declared VAR: 'y' (Type: FLOAT)
-[PROD] Declared VAR: 'x' (Type: FLOAT)
-[PROD] Assignment: 'i' := 2
-[PROD] Assignment: 'j' := 3
-[PROD] Assignment: 'k' := 4
-[PROD] Assignment: 'x' := 1.5
-[PROD] Assignment: 'y' := 0.5
-[PROD] Expression: Identifier 'j' -> Type: INT
-[PROD] Expression: Identifier 'i' -> Type: INT
-[PROD] Skipped full comment line
-[PROD] Expression: Identifier 'j' -> Type: INT
-[PROD] Generating code
-[PROD] Generating runtime loop for POW
-[PROD] Generating code
-[PROD] Generating code
-[PROD] Assignment: 'i' := $t01
-[PROD] Skipped full comment line
+[PROD] Type: bool
+[PROD] Declared VAR: 'd' (Type: BOOL)
+[PROD] Assignment: 'd' := 1
+[PROD] Assignment: 'x' := 1
+[PROD] Assignment: 'y' := 3.12
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] IO: Generating PUT for INT expression
+[PROD] Expression: Identifier 'y' -> Type: FLOAT
+[PROD] IO: Generating PUT for FLOAT expression
+[PROD] Expression: Identifier 'd' -> Type: BOOL
+[PROD] IO: Generating PUT for BOOL expression
+[PROD] Expression: Identifier 'd' -> Type: BOOL
+[PROD] Converting to flow
+[PROD] IO: Generating PUT for BOOL expression
 [PROD] Optimization: Constant Folding applied
 [PROD] Optimization: Constant Folding applied
-[PROD] Assignment: 'k' := 512
-[PROD] Expression: Identifier 'k' -> Type: INT
-[PROD] Generating code
-[PROD] Skipped full comment line
-[PROD] Expression: Identifier 'i' -> Type: INT
-[PROD] Generating code
-[PROD] Assignment: 'j' := $t01
-[PROD] Expression: Identifier 'j' -> Type: INT
-[PROD] Generating code
-[PROD] Skipped full comment line
-[PROD] Expression: Identifier 'k' -> Type: INT
-[PROD] Generating code
-[PROD] Assignment: 'k' := $t01
-[PROD] Skipped full comment line
-[PROD] Optimization: Constant Folding Unary Minus
+[PROD] Array Store: a[...]
 [PROD] Optimization: Constant Folding applied
-[PROD] Assignment: 'i' := 8
-[PROD] Skipped full comment line
-[PROD] Optimization: Constant Folding Unary Minus
 [PROD] Optimization: Constant Folding applied
-[PROD] Assignment: 'j' := 12
-[PROD] Expression: Identifier 'i' -> Type: INT
-[PROD] Expression: Parenthesized
-[PROD] Skipped full comment line
-[PROD] Generating code
-[PROD] Assignment: 'k' := $t01
-[PROD] Expression: Identifier 'i' -> Type: INT
-[PROD] Expression: Parenthesized
-[PROD] Skipped full comment line
-[PROD] Generating code
-[PROD] Assignment: 'i' := $t01
-[PROD] Optimization: Constant Folding Unary Minus
-[PROD] Skipped full comment line
+[PROD] Array Store: b[...]
+[PROD] Array Access: a[...] (offset calculation)
 [PROD] Optimization: Constant Folding applied
-[PROD] Assignment: 'j' := -5
 [PROD] Optimization: Constant Folding applied
-[PROD] Expression: Parenthesized
+[PROD] IO: Generating PUT for INT expression
+[PROD] Array Access: b[...] (offset calculation)
+[PROD] Optimization: Constant Folding applied
+[PROD] Optimization: Constant Folding applied
+[PROD] IO: Generating PUT for FLOAT expression
 [PROD] Skipped full comment line
-[PROD] Optimization: Constant Folding applied
-[PROD] Assignment: 'i' := 36
-[PROD] Optimization: Constant Folding applied
-[PROD] Expression: Parenthesized
-[PROD] Skipped full comment line
-[PROD] Optimization: Constant Folding applied
-[PROD] Assignment: 'j' := 16
-[PROD] Optimization: Constant Folding applied
-[PROD] Expression: Parenthesized
-[PROD] Skipped full comment line
-[PROD] Optimization: Constant Folding Unary Minus
-[PROD] Assignment: 'k' := -12
-[PROD] Skipped full comment line
-[PROD] Skipped full comment line
-[PROD] Optimization: Constant Folding applied
-[PROD] Recovered from item list error, skipping item.
-[PROD] Optimization: Constant Folding applied
-[PROD] Skipped full comment line
-[PROD] Recovered from item list error, skipping item.
-[PROD] Optimization: Constant Folding applied
-[PROD] Expression: Parenthesized
-[PROD] Assignment: 'i' := 5
-[PROD] Skipped full comment line
-[PROD] Recovered from item list error, skipping item.
-[PROD] Multiline comment start on row: 32 col: 0
+[PROD] Expression: Identifier 'a' -> Type: INT
+[PROD] Multiline comment start on row: 21 col: 0
 [PROD] Multicomment skipping characters
-[PROD] Multiline comment closed on row: 67 col: 0
+[PROD] Multiline comment closed on row: 37 col: 0
 --- END OF ANALYSIS ---

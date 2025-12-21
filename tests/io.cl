@@ -1,10 +1,14 @@
 int x, a[1]
 float y, b[1]
+bool d
 
+d := true
 x := 1
 y := 3.12
 x
 y
+d
+not d
 
 a[0] := 1
 b[0] := 3.12

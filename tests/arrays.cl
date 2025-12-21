@@ -5,16 +5,16 @@ a[0] := 1
 c[1] := 1 * 5
 c[2] := b + c[a[0] + 5]
 d[0] := float(c[2] + c[1])
-
-a := int(d)
+f[0] := float(1)
+c[0]
 
 // Errors
-a := int(d)
+/*a := int(d)
 b := b + a
 float x[-2]
 float y[0]
 d := 1
-f[1]
+f[1]*/
 
 /*
 b := 2
