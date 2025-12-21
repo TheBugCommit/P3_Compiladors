@@ -54,15 +54,9 @@ ExprResult generate_pow_code(ExprResult a, ExprResult b) {
 
     char* t_res = gen_new_temp();
     char* t_cnt = gen_new_temp();
-
-    if (a.type == TYPE_FLOAT) {
-        emit_assign(t_res, "1.0");
-        res.type = TYPE_FLOAT;
-    } else {
-        emit_assign(t_res, "1");
-        res.type = TYPE_INT;
-    }
-
+    res.type = a.type;
+    char* value = a.type == TYPE_FLOAT ? "1.0" : "1";
+    emit_assign(t_res, value);
     emit_assign(t_cnt, "0");
 
     int start_label = gen_get_label();
