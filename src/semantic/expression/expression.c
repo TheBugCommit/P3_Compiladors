@@ -49,12 +49,6 @@ ExprResult eval_pow(ExprResult a, ExprResult b) {
 ExprResult eval_cast(DATA_TYPE target_type, ExprResult expr) {
     if (expr.type == TYPE_VOID) return expr;
 
-    if (!is_numeric(&expr)) {
-        if (expr.addr) free(expr.addr);
-        ExprResult err = {TYPE_VOID};
-        return err;
-    }
-
     log_production("Explicit Cast: Converting %s to %s", TYPE_NAME[expr.type],
                    TYPE_NAME[target_type]);
 

@@ -1,5 +1,6 @@
 int x
 float y
+bool b
 
 //Implicits
 x := 3
@@ -11,6 +12,10 @@ x := int(3.1416)
 x := int(y)
 y := float(x)
 y := float(2)
+b := bool(true)
+b := bool(3)
+b := bool(0)
+b := bool(x + 3.0)
 
 //errors
 y := x

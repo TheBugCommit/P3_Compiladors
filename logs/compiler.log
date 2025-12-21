@@ -1,41 +1,52 @@
 --- START OF ANALYSIS ---
 [PROD] Type: int
-[PROD] Declared ARRAY: 'a' [1] (Type: INT)
 [PROD] Declared VAR: 'x' (Type: INT)
 [PROD] Type: float
-[PROD] Declared ARRAY: 'b' [1] (Type: FLOAT)
 [PROD] Declared VAR: 'y' (Type: FLOAT)
 [PROD] Type: bool
-[PROD] Declared VAR: 'd' (Type: BOOL)
-[PROD] Assignment: 'd' := 1
-[PROD] Assignment: 'x' := 1
-[PROD] Assignment: 'y' := 3.12
-[PROD] Expression: Identifier 'x' -> Type: INT
-[PROD] IO: Generating PUT for INT expression
-[PROD] Expression: Identifier 'y' -> Type: FLOAT
-[PROD] IO: Generating PUT for FLOAT expression
-[PROD] Expression: Identifier 'd' -> Type: BOOL
-[PROD] IO: Generating PUT for BOOL expression
-[PROD] Expression: Identifier 'd' -> Type: BOOL
-[PROD] Converting to flow
-[PROD] IO: Generating PUT for BOOL expression
-[PROD] Optimization: Constant Folding applied
-[PROD] Optimization: Constant Folding applied
-[PROD] Array Store: a[...]
-[PROD] Optimization: Constant Folding applied
-[PROD] Optimization: Constant Folding applied
-[PROD] Array Store: b[...]
-[PROD] Array Access: a[...] (offset calculation)
-[PROD] Optimization: Constant Folding applied
-[PROD] Optimization: Constant Folding applied
-[PROD] IO: Generating PUT for INT expression
-[PROD] Array Access: b[...] (offset calculation)
-[PROD] Optimization: Constant Folding applied
-[PROD] Optimization: Constant Folding applied
-[PROD] IO: Generating PUT for FLOAT expression
+[PROD] Declared VAR: 'b' (Type: BOOL)
 [PROD] Skipped full comment line
-[PROD] Expression: Identifier 'a' -> Type: INT
-[PROD] Multiline comment start on row: 21 col: 0
+[PROD] Assignment: 'x' := 3
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Optimization: Constant Folding Unary Minus
+[PROD] Expression: Parenthesized
+[PROD] Generating code
+[PROD] Generating code
+[PROD] Assignment: 'y' := $t01
+[PROD] Skipped full comment line
+[PROD] Assignment: 'x' := 1
+[PROD] Type: int
+[PROD] Explicit Cast: Converting FLOAT to INT
+[PROD] Assignment: 'x' := 3
+[PROD] Type: int
+[PROD] Expression: Identifier 'y' -> Type: FLOAT
+[PROD] Explicit Cast: Converting FLOAT to INT
+[PROD] Assignment: 'x' := $t01
+[PROD] Type: float
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Explicit Cast: Converting INT to FLOAT
+[PROD] Assignment: 'y' := $t01
+[PROD] Type: float
+[PROD] Explicit Cast: Converting INT to FLOAT
+[PROD] Assignment: 'y' := 2.0
+[PROD] Type: bool
+[PROD] Explicit Cast: Converting BOOL to BOOL
+[PROD] Assignment: 'b' := 1
+[PROD] Type: bool
+[PROD] Explicit Cast: Converting INT to BOOL
+[PROD] Assignment: 'b' := 1
+[PROD] Type: bool
+[PROD] Explicit Cast: Converting INT to BOOL
+[PROD] Assignment: 'b' := 0
+[PROD] Type: bool
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Generating code
+[PROD] Explicit Cast: Converting FLOAT to BOOL
+[PROD] Converting to flow
+[PROD] Assignment: 'b' := $t01
+[PROD] Skipped full comment line
+[PROD] Expression: Identifier 'x' -> Type: INT
+[PROD] Multiline comment start on row: 23 col: 0
 [PROD] Multicomment skipping characters
 [PROD] Multiline comment closed on row: 37 col: 0
 --- END OF ANALYSIS ---

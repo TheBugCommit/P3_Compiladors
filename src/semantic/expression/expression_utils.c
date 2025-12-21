@@ -73,6 +73,18 @@ ExprResult make_literal_result(DATA_TYPE type, double val) {
 ExprResult ensure_type(ExprResult expr, DATA_TYPE target_type) {
     if (expr.type == target_type) return expr;
 
+    if(target_type == TYPE_BOOL) {
+        if (expr.is_constant) {
+            double val = get_value(expr);
+            if (expr.addr) free(expr.addr);
+            return make_literal_result(TYPE_BOOL, val != 0.0);
+        }
+        expr.type = TYPE_BOOL;
+        convert_to_flow(&expr); 
+        ensure_boolean_value(&expr);
+        return expr;
+    }
+
     if (expr.type == TYPE_INT && target_type == TYPE_FLOAT) {
         if (expr.is_constant) {
             if (expr.addr) free(expr.addr);
