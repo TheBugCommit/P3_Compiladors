@@ -245,13 +245,15 @@ expression_sentence:
 
 /* Level 1: OR */
 expression:
-    expression TK_OR M bool_term { $$ = eval_or($1, $3, $4); }
+    expression TK_OR { convert_to_flow(&$1); }
+    M bool_term { $$ = eval_or($1, $4, $5); }
     | bool_term { $$ = $1; }
 ;
 
 /* Level 2: AND */
 bool_term:
-    bool_term TK_AND M bool_factor { $$ = eval_and($1, $3, $4); }
+    bool_term TK_AND { convert_to_flow(&$1); }
+    M bool_factor { $$ = eval_and($1, $4, $5); }
     | bool_factor { $$ = $1; }
 ;
 
